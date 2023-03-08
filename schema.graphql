@@ -1,0 +1,6 @@
+type ExampleEntity @entity {
+  id: ID!
+  count: BigInt!
+  _campaignAddress: Bytes! # address
+  _creator: Bytes! # address
+}

@@ -1,0 +1,38 @@
+specVersion: 0.0.1
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: CrowdFunder
+    network: goerli
+    source:
+      address: "0x589ae79f419D8be3C0E29C93e850D08a03c5ffcc"
+      abi: CrowdFunder
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - CampaignAdded
+        - CampaignFunded
+        - CampaignRemoved
+        - CampaignShrunk
+        - UserAdded
+        - UserHomeAddrAdded
+      abis:
+        - name: CrowdFunder
+          file: ./abis/CrowdFunder.json
+      eventHandlers:
+        - event: CampaignAdded(indexed address,indexed address,string,string[])
+          handler: handleCampaignAdded
+        - event: CampaignFunded(indexed address,indexed address)
+          handler: handleCampaignFunded
+        - event: CampaignRemoved(indexed address)
+          handler: handleCampaignRemoved
+        - event: CampaignShrunk(indexed address,indexed address)
+          handler: handleCampaignShrunk
+        - event: UserAdded(indexed address,string,string,string,string,string)
+          handler: handleUserAdded
+        - event: UserHomeAddrAdded(address,string)
+          handler: handleUserHomeAddrAdded
+      file: ./src/crowd-funder.ts
