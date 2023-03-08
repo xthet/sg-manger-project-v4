@@ -1,6 +1,52 @@
-type ExampleEntity @entity {
+type CampaignAdded @entity {
   id: ID!
-  count: BigInt!
-  _campaignAddress: Bytes! # address
-  _creator: Bytes! # address
+  campaignAddress: Bytes!
+  creator: Bytes!
+  category: String!
+  tags: [String!]!
+  funders: [Bytes!]!
+  funderCount: BigInt!
+  createdAt: BigInt!
+}
+
+type CampaignFunded @entity {
+  id: ID!
+  funder: Bytes!
+  campaignAddress: Bytes!
+  createdAt: BigInt!
+}
+
+type CampaignRemoved @entity {
+  id: ID!
+  campaignAddress: Bytes!
+  createdAt: BigInt!
+}
+
+type CampaignShrunk @entity {
+  id: ID!
+  withdrawer: Bytes!
+  campaignAddress: Bytes!
+  createdAt: BigInt!
+}
+
+type UserAdded @entity {
+  id: ID!
+  address: Bytes!
+  username: String
+  twitter: String
+  email: String
+  location: String
+  homeAddr: String
+  bio: String
+  created: [Bytes!]!
+  backed: [Bytes!]!
+  createdCount: BigInt
+  backedCount: BigInt
+  createdAt: BigInt!
+}
+
+type UserHomeAddrAdded @entity {
+  id: ID!
+  userAddress: Bytes! # address
+  homeAddr: String! # string
 }
