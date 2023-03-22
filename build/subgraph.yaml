@@ -1,6 +1,6 @@
 specVersion: 0.0.4
 schema:
-  file: ./schema.graphql
+  file: schema.graphql
 dataSources:
   - kind: ethereum
     name: CrowdFunder
@@ -22,7 +22,7 @@ dataSources:
         - UserHomeAddrAdded
       abis:
         - name: CrowdFunder
-          file: ./abis/CrowdFunder.json
+          file: CrowdFunder\abis\CrowdFunder.json
       eventHandlers:
         - event: CampaignAdded(indexed address,indexed address,string,string[])
           handler: handleCampaignAdded
@@ -36,7 +36,7 @@ dataSources:
           handler: handleUserAdded
         - event: UserHomeAddrAdded(address,string)
           handler: handleUserHomeAddrAdded
-      file: ./src/crowd-funder.ts
+      file: CrowdFunder\CrowdFunder.wasm
   - kind: ethereum
     name: mii
     network: goerli
@@ -57,7 +57,7 @@ dataSources:
         - miiUserHomeAddrAdded
       abis:
         - name: mii
-          file: ./abis/mii.json
+          file: mii\abis\mii.json
       eventHandlers:
         - event: miiCampaignAdded(indexed address,indexed address,string,string[])
           handler: handlemiiCampaignAdded
@@ -71,4 +71,4 @@ dataSources:
           handler: handlemiiUserAdded
         - event: miiUserHomeAddrAdded(address,string)
           handler: handlemiiUserHomeAddrAdded
-      file: ./src/mii.ts
+      file: mii\mii.wasm

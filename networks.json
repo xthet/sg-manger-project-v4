@@ -2,6 +2,9 @@
   "goerli": {
     "CrowdFunder": {
       "address": "0x589ae79f419D8be3C0E29C93e850D08a03c5ffcc"
+    },
+    "mii": {
+      "address": "0xb132dECFFbF3bE5cf6D50902Ebf6b481F9d1f937"
     }
   }
 }
