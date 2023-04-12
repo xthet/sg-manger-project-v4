@@ -1,0 +1,39 @@
+specVersion: 0.0.5
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: CrowdFunder
+    network: fuji
+    source:
+      address: "0xD7aCccc5Dd71F8bAE9eE478acDFa681C7eBECd20"
+      abi: CrowdFunder
+      startBlock: 20843366
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - CampaignAdded
+        - CampaignFunded
+        - CampaignPublished
+        - CampaignRemoved
+        - CampaignShrunk
+        - UserAdded
+      abis:
+        - name: CrowdFunder
+          file: ./abis/CrowdFunder.json
+      eventHandlers:
+        - event: CampaignAdded(indexed address,indexed address,string,string,string,string[])
+          handler: handleCampaignAdded
+        - event: CampaignFunded(indexed address,indexed address)
+          handler: handleCampaignFunded
+        - event: CampaignPublished(address)
+          handler: handleCampaignPublished
+        - event: CampaignRemoved(indexed address)
+          handler: handleCampaignRemoved
+        - event: CampaignShrunk(indexed address,indexed address)
+          handler: handleCampaignShrunk
+        - event: UserAdded(indexed address,string,string,string,string,string)
+          handler: handleUserAdded
+      file: ./src/crowd-funder.ts
