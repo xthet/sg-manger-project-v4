@@ -1,106 +1,156 @@
+import { BigInt, Bytes, store } from "@graphprotocol/graph-ts"
 import {
   CampaignAdded as CampaignAddedEvent,
   CampaignFunded as CampaignFundedEvent,
-  CampaignPublished as CampaignPublishedEvent,
   CampaignRemoved as CampaignRemovedEvent,
   CampaignShrunk as CampaignShrunkEvent,
-  UserAdded as UserAddedEvent
+  UserAdded as UserAddedEvent,
+  CampaignPublished as CampaignPublishedEvent
 } from "../generated/CrowdFunder/CrowdFunder"
 import {
   CampaignAdded,
   CampaignFunded,
-  CampaignPublished,
   CampaignRemoved,
   CampaignShrunk,
-  UserAdded
+  UserAdded,
 } from "../generated/schema"
 
 export function handleCampaignAdded(event: CampaignAddedEvent): void {
-  let entity = new CampaignAdded(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity._campaignAddress = event.params._campaignAddress
-  entity._creator = event.params._creator
-  entity._title = event.params._title
-  entity._description = event.params._description
-  entity._category = event.params._category
-  entity._tags = event.params._tags
+  let campaignAdded = CampaignAdded.load(event.params._campaignAddress.toHexString())
+  let userAdded = UserAdded.load(event.params._creator.toHexString())
 
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
+  if(!campaignAdded){
+    campaignAdded = new CampaignAdded(event.params._campaignAddress.toHexString())
+    campaignAdded.funderCount = BigInt.fromString("0")
+    campaignAdded.funders = new Array<Bytes>(0)
+    campaignAdded.createdAt = event.block.timestamp
+    campaignAdded.published = false
+  }
+  if(!userAdded){
+    userAdded = new UserAdded(event.params._creator.toHexString())
+    userAdded.address = event.params._creator
+    userAdded.created = new Array<Bytes>(0)
+    userAdded.backed = new Array<Bytes>(0)
+    userAdded.createdCount = BigInt.fromString("0")
+    userAdded.backedCount = BigInt.fromString("0")
+    userAdded.createdAt = event.block.timestamp
+  }
 
-  entity.save()
+  campaignAdded.campaignAddress = event.params._campaignAddress
+  campaignAdded.creator = event.params._creator
+  campaignAdded.title = event.params._title
+  campaignAdded.description = event.params._description
+  campaignAdded.category = event.params._category
+  campaignAdded.tags = event.params._tags
+
+  let createdCmps = userAdded.created
+  createdCmps.push(event.params._campaignAddress)
+  userAdded.created = createdCmps
+
+  userAdded.createdCount = userAdded.createdCount!.plus(BigInt.fromString("1"))
+
+  userAdded.save()
+  campaignAdded.save()
 }
 
 export function handleCampaignFunded(event: CampaignFundedEvent): void {
-  let entity = new CampaignFunded(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity._funder = event.params._funder
-  entity._campaignAddress = event.params._campaignAddress
+  let campaignAdded = CampaignAdded.load(event.params._campaignAddress.toHexString())
+  let userAdded = UserAdded.load(event.params._funder.toHexString())
 
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
+  if(!userAdded){
+    userAdded = new UserAdded(event.params._funder.toHexString())
+    userAdded.address = event.params._funder
+    userAdded.created = new Array<Bytes>(0)
+    userAdded.backed = new Array<Bytes>(0)
+    userAdded.createdCount = BigInt.fromString("0")
+    userAdded.backedCount = BigInt.fromString("0")
+    userAdded.createdAt = event.block.timestamp
+  }
 
-  entity.save()
-}
+  let cmpFunders = campaignAdded!.funders
+  cmpFunders.push(event.params._funder)
+  campaignAdded!.funders = cmpFunders
 
-export function handleCampaignPublished(event: CampaignPublishedEvent): void {
-  let entity = new CampaignPublished(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity._campaignAddress = event.params._campaignAddress
+  campaignAdded!.funderCount.plus(BigInt.fromString("1"))
 
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
+  let backers = userAdded.backed
+  backers.push(event.params._campaignAddress)
+  userAdded.backed = backers
 
-  entity.save()
+  userAdded.backedCount = userAdded.backedCount!.plus(BigInt.fromString("1"))
+
+  campaignAdded!.save()
+  userAdded.save()
 }
 
 export function handleCampaignRemoved(event: CampaignRemovedEvent): void {
-  let entity = new CampaignRemoved(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity._campaignAddress = event.params._campaignAddress
-
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
+  let id = event.params._campaignAddress.toHexString()
+  store.remove("CampaignAdded", id)
 }
 
 export function handleCampaignShrunk(event: CampaignShrunkEvent): void {
-  let entity = new CampaignShrunk(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity._withdrawer = event.params._withdrawer
-  entity._campaignAddress = event.params._campaignAddress
+  let campaignAdded = CampaignAdded.load(event.params._campaignAddress.toHexString())
+  let userAdded = UserAdded.load(event.params._withdrawer.toHexString())
 
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
+  if(!userAdded){
+    userAdded = new UserAdded(event.params._withdrawer.toHexString())
+    userAdded.address = event.params._withdrawer
+    userAdded.created = new Array<Bytes>(0)
+    userAdded.backed = new Array<Bytes>(0)
+    userAdded.createdCount = BigInt.fromString("0")
+    userAdded.backedCount = BigInt.fromString("0")
+    userAdded.createdAt = event.block.timestamp
+  }
 
-  entity.save()
+  let cmpFunders = campaignAdded!.funders
+  if(cmpFunders.includes(event.params._withdrawer)){
+    const index = cmpFunders.indexOf(event.params._withdrawer)
+    cmpFunders.splice(index, 1)
+  }
+  campaignAdded!.funders = cmpFunders
+
+  campaignAdded!.funderCount.minus(BigInt.fromString("1"))
+
+  let backers = userAdded.backed
+  if(backers.includes(event.params._campaignAddress)){
+    const index = backers.indexOf(event.params._campaignAddress)
+    backers.splice(index, 1)
+  }
+  userAdded.backed = backers
+
+  userAdded.backedCount = userAdded.backedCount!.minus(BigInt.fromString("1"))
+  
+  campaignAdded!.save()
+  userAdded.save()
 }
 
 export function handleUserAdded(event: UserAddedEvent): void {
-  let entity = new UserAdded(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity._address = event.params._address
-  entity._username = event.params._username
-  entity._twitter = event.params._twitter
-  entity._email = event.params._email
-  entity._homeAddress = event.params._homeAddress
-  entity._sig = event.params._sig
+  let userAdded = UserAdded.load(event.params._address.toHexString())
 
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
+  if(!userAdded){
+    userAdded = new UserAdded(event.params._address.toHexString())
+    userAdded.address = event.params._address
+    userAdded.created = new Array<Bytes>(0)
+    userAdded.backed = new Array<Bytes>(0)
+    userAdded.createdCount = BigInt.fromString("0")
+    userAdded.backedCount = BigInt.fromString("0")
+    userAdded.sig = event.params._sig
+    userAdded.createdAt = event.block.timestamp
+  }
 
-  entity.save()
+  userAdded.address = event.params._address
+  userAdded.username = event.params._username
+  userAdded.twitter = event.params._twitter
+  userAdded.email = event.params._email
+  userAdded.sig = event.params._sig
+  userAdded.homeAddr = event.params._homeAddress
+  userAdded.createdAt = event.block.timestamp
+
+  userAdded.save()
+}
+
+export function handleCampaignPublished(event: CampaignPublishedEvent): void {
+  let campaignAdded = CampaignAdded.load(event.params._campaignAddress.toHexString())
+  campaignAdded!.published = true
+  campaignAdded!.save()
 }

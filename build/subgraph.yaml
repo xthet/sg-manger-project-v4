@@ -1,6 +1,6 @@
 specVersion: 0.0.5
 schema:
-  file: ./schema.graphql
+  file: schema.graphql
 features:
   - fullTextSearch
 dataSources:
@@ -24,7 +24,7 @@ dataSources:
         - UserAdded
       abis:
         - name: CrowdFunder
-          file: ./abis/CrowdFunder.json
+          file: CrowdFunder\abis\CrowdFunder.json
       eventHandlers:
         - event: CampaignAdded(indexed address,indexed address,string,string,string,string[])
           handler: handleCampaignAdded
@@ -38,4 +38,4 @@ dataSources:
           handler: handleCampaignShrunk
         - event: UserAdded(indexed address,string,string,string,string,string)
           handler: handleUserAdded
-      file: ./src/crowd-funder.ts
+      file: CrowdFunder\CrowdFunder.wasm
