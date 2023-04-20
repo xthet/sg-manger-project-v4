@@ -87,13 +87,13 @@ export class CampaignAdded extends Entity {
     this.set("category", Value.fromString(value));
   }
 
-  get tags(): Array<string> {
+  get tags(): string {
     let value = this.get("tags");
-    return value!.toStringArray();
+    return value!.toString();
   }
 
-  set tags(value: Array<string>) {
-    this.set("tags", Value.fromStringArray(value));
+  set tags(value: string) {
+    this.set("tags", Value.fromString(value));
   }
 
   get funders(): Array<Bytes> {

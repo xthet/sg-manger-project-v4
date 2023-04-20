@@ -2,7 +2,10 @@ type _Schema_ @fulltext(
   name: "campaignSearch"
   language: en
   algorithm: rank
-  include: [{entity: "CampaignAdded", fields:[{name: "title"}, {name: "description"}, {name: "tags"} {name: "category"}]}]
+  include: [
+    {entity: "CampaignAdded", fields:[{name: "title"}, {name: "description"}, {name: "tags"} {name: "category"}]},
+    {entity: "UserAdded", fields:[{name: "username"}]}
+  ]
 )
 
 type CampaignAdded @entity {
@@ -12,7 +15,7 @@ type CampaignAdded @entity {
   title: String!
   description: String!
   category: String!
-  tags: [String!]!
+  tags: String!
   funders: [Bytes!]!
   funderCount: BigInt!
   createdAt: BigInt!

@@ -59,9 +59,9 @@
       },
       {
         "indexed": false,
-        "internalType": "string[]",
+        "internalType": "string",
         "name": "_tags",
-        "type": "string[]"
+        "type": "string"
       }
     ],
     "name": "CampaignAdded",
@@ -196,9 +196,9 @@
         "type": "string"
       },
       {
-        "internalType": "string[]",
+        "internalType": "string",
         "name": "_tags",
-        "type": "string[]"
+        "type": "string"
       },
       {
         "internalType": "uint256",

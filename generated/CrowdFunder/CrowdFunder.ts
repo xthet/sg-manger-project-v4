@@ -43,8 +43,8 @@ export class CampaignAdded__Params {
     return this._event.parameters[4].value.toString();
   }
 
-  get _tags(): Array<string> {
-    return this._event.parameters[5].value.toStringArray();
+  get _tags(): string {
+    return this._event.parameters[5].value.toString();
   }
 }
 
@@ -250,8 +250,8 @@ export class AddCampaignCall__Inputs {
     return this._call.inputValues[2].value.toString();
   }
 
-  get _tags(): Array<string> {
-    return this._call.inputValues[3].value.toStringArray();
+  get _tags(): string {
+    return this._call.inputValues[3].value.toString();
   }
 
   get _goalAmount(): BigInt {

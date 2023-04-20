@@ -6,11 +6,11 @@ features:
 dataSources:
   - kind: ethereum
     name: CrowdFunder
-    network: fuji
+    network: sepolia
     source:
-      address: "0xD7aCccc5Dd71F8bAE9eE478acDFa681C7eBECd20"
+      address: "0x4808095408DfBa20953D9db85C63dd94D61849A8"
       abi: CrowdFunder
-      startBlock: 20843365
+      startBlock: 3324817
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -26,7 +26,7 @@ dataSources:
         - name: CrowdFunder
           file: ./abis/CrowdFunder.json
       eventHandlers:
-        - event: CampaignAdded(indexed address,indexed address,string,string,string,string[])
+        - event: CampaignAdded(indexed address,indexed address,string,string,string,string)
           handler: handleCampaignAdded
         - event: CampaignFunded(indexed address,indexed address)
           handler: handleCampaignFunded
