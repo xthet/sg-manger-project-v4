@@ -469,15 +469,6 @@ export class UserAdded extends Entity {
   set createdAt(value: BigInt) {
     this.set("createdAt", Value.fromBigInt(value));
   }
-
-  get sig(): string {
-    let value = this.get("sig");
-    return value!.toString();
-  }
-
-  set sig(value: string) {
-    this.set("sig", Value.fromString(value));
-  }
 }
 
 export class CampaignPublished extends Entity {

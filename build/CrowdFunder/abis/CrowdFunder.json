@@ -163,12 +163,6 @@
         "internalType": "string",
         "name": "_homeAddress",
         "type": "string"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "_sig",
-        "type": "string"
       }
     ],
     "name": "UserAdded",
@@ -246,11 +240,6 @@
       {
         "internalType": "string",
         "name": "_homeAddress",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "_sig",
         "type": "string"
       }
     ],

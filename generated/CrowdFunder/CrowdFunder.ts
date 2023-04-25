@@ -160,10 +160,6 @@ export class UserAdded__Params {
   get _homeAddress(): string {
     return this._event.parameters[4].value.toString();
   }
-
-  get _sig(): string {
-    return this._event.parameters[5].value.toString();
-  }
 }
 
 export class CrowdFunder extends ethereum.SmartContract {
@@ -310,10 +306,6 @@ export class AddUserCall__Inputs {
 
   get _homeAddress(): string {
     return this._call.inputValues[4].value.toString();
-  }
-
-  get _sig(): string {
-    return this._call.inputValues[5].value.toString();
   }
 }
 
