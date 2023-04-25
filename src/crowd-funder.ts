@@ -2,17 +2,14 @@ import { BigInt, Bytes, store } from "@graphprotocol/graph-ts"
 import {
   CampaignAdded as CampaignAddedEvent,
   CampaignFunded as CampaignFundedEvent,
+  CampaignPublished as CampaignPublishedEvent,
   CampaignRemoved as CampaignRemovedEvent,
   CampaignShrunk as CampaignShrunkEvent,
-  UserAdded as UserAddedEvent,
-  CampaignPublished as CampaignPublishedEvent
+  UserAdded as UserAddedEvent
 } from "../generated/CrowdFunder/CrowdFunder"
 import {
   CampaignAdded,
-  CampaignFunded,
-  CampaignRemoved,
-  CampaignShrunk,
-  UserAdded,
+  UserAdded
 } from "../generated/schema"
 
 export function handleCampaignAdded(event: CampaignAddedEvent): void {
@@ -134,7 +131,6 @@ export function handleUserAdded(event: UserAddedEvent): void {
     userAdded.backed = new Array<Bytes>(0)
     userAdded.createdCount = BigInt.fromString("0")
     userAdded.backedCount = BigInt.fromString("0")
-    userAdded.sig = event.params._sig
     userAdded.createdAt = event.block.timestamp
   }
 
@@ -142,7 +138,6 @@ export function handleUserAdded(event: UserAddedEvent): void {
   userAdded.username = event.params._username
   userAdded.twitter = event.params._twitter
   userAdded.email = event.params._email
-  userAdded.sig = event.params._sig
   userAdded.homeAddr = event.params._homeAddress
   userAdded.createdAt = event.block.timestamp
 
@@ -151,6 +146,8 @@ export function handleUserAdded(event: UserAddedEvent): void {
 
 export function handleCampaignPublished(event: CampaignPublishedEvent): void {
   let campaignAdded = CampaignAdded.load(event.params._campaignAddress.toHexString())
-  campaignAdded!.published = true
-  campaignAdded!.save()
+  if(campaignAdded){  
+    campaignAdded.published = true
+    campaignAdded.save()
+  }
 }

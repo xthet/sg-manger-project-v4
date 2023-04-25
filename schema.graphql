@@ -54,7 +54,6 @@ type UserAdded @entity {
   createdCount: BigInt
   backedCount: BigInt
   createdAt: BigInt!
-  sig: String!
 }
 
 type CampaignPublished @entity {
