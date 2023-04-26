@@ -8,6 +8,14 @@ type _Schema_ @fulltext(
   ]
 )
 
+type CrowdFunder @entity {
+  id:ID!
+  campaignCount: BigInt
+  amountDonated: BigInt
+  donationCount: BigInt
+  creatorCount: BigInt
+}
+
 type CampaignAdded @entity {
   id: ID!
   campaignAddress: Bytes!

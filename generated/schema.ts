@@ -11,6 +11,89 @@ import {
   BigDecimal
 } from "@graphprotocol/graph-ts";
 
+export class CrowdFunder extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save CrowdFunder entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type CrowdFunder must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("CrowdFunder", id.toString(), this);
+    }
+  }
+
+  static load(id: string): CrowdFunder | null {
+    return changetype<CrowdFunder | null>(store.get("CrowdFunder", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get campaignCount(): BigInt | null {
+    let value = this.get("campaignCount");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set campaignCount(value: BigInt | null) {
+    if (!value) {
+      this.unset("campaignCount");
+    } else {
+      this.set("campaignCount", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get amountDonated(): BigInt | null {
+    let value = this.get("amountDonated");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set amountDonated(value: BigInt | null) {
+    if (!value) {
+      this.unset("amountDonated");
+    } else {
+      this.set("amountDonated", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get donationCount(): BigInt | null {
+    let value = this.get("donationCount");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set donationCount(value: BigInt | null) {
+    if (!value) {
+      this.unset("donationCount");
+    } else {
+      this.set("donationCount", Value.fromBigInt(<BigInt>value));
+    }
+  }
+}
+
 export class CampaignAdded extends Entity {
   constructor(id: string) {
     super();
