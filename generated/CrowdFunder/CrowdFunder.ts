@@ -90,6 +90,10 @@ export class CampaignPublished__Params {
   get _campaignAddress(): Address {
     return this._event.parameters[0].value.toAddress();
   }
+
+  get _creator(): Address {
+    return this._event.parameters[1].value.toAddress();
+  }
 }
 
 export class CampaignRemoved extends ethereum.Event {

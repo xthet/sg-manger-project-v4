@@ -13,7 +13,7 @@ import {
   CrowdFunder
 } from "../generated/schema"
 
-const cdf = "0x2Ed1BaFfc275CcDd1bB7A3A7212713e546098a69"
+const cdf = "0xAcf61e279354Eae096cF2B399c330baeeE1e9c38"
 
 export function handleCampaignAdded(event: CampaignAddedEvent): void {
   let campaignAdded = CampaignAdded.load(event.params._campaignAddress.toHexString())
@@ -24,6 +24,7 @@ export function handleCampaignAdded(event: CampaignAddedEvent): void {
     crowdFunder.trueAmount = BigInt.fromString("0")
     crowdFunder.campaignCount = BigInt.fromString("0")
     crowdFunder.donationCount = BigInt.fromString("0")
+    crowdFunder.creatorCount = BigInt.fromString("0")
   }
 
   if(!campaignAdded){
@@ -53,8 +54,8 @@ export function handleCampaignAdded(event: CampaignAddedEvent): void {
   let createdCmps = userAdded.created
   createdCmps.push(event.params._campaignAddress)
   userAdded.created = createdCmps
+  // both published and drafts
 
-  userAdded.createdCount = userAdded.createdCount!.plus(BigInt.fromString("1"))
 
   userAdded.save()
   campaignAdded.save()
@@ -70,6 +71,7 @@ export function handleCampaignFunded(event: CampaignFundedEvent): void {
     crowdFunder.trueAmount = BigInt.fromString("0")
     crowdFunder.campaignCount = BigInt.fromString("0")
     crowdFunder.donationCount = BigInt.fromString("0")
+    crowdFunder.creatorCount = BigInt.fromString("0")
   }
 
   if(!userAdded){
@@ -104,25 +106,34 @@ export function handleCampaignFunded(event: CampaignFundedEvent): void {
 
 export function handleCampaignRemoved(event: CampaignRemovedEvent): void {
   let id = event.params._campaignAddress.toHexString()
-  store.remove("CampaignAdded", id)
+  let campaignAdded = CampaignAdded.load(event.params._campaignAddress.toHexString())
   let crowdFunder = CrowdFunder.load(cdf)
   if(!crowdFunder){
     crowdFunder = new CrowdFunder(cdf)
     crowdFunder.trueAmount = BigInt.fromString("0")
     crowdFunder.campaignCount = BigInt.fromString("0")
     crowdFunder.donationCount = BigInt.fromString("0")
+    crowdFunder.creatorCount = BigInt.fromString("0")
   }
+  if(campaignAdded!.published){
+    crowdFunder.campaignCount = crowdFunder.campaignCount!.minus(BigInt.fromString("1"))
+  }
+
+  store.remove("CampaignAdded", id)
+  crowdFunder.save()
 }
 
 export function handleCampaignShrunk(event: CampaignShrunkEvent): void {
   let campaignAdded = CampaignAdded.load(event.params._campaignAddress.toHexString())
   let userAdded = UserAdded.load(event.params._withdrawer.toHexString())
   let crowdFunder = CrowdFunder.load(cdf)
+
   if(!crowdFunder){
     crowdFunder = new CrowdFunder(cdf)
     crowdFunder.trueAmount = BigInt.fromString("0")
     crowdFunder.campaignCount = BigInt.fromString("0")
     crowdFunder.donationCount = BigInt.fromString("0")
+    crowdFunder.creatorCount = BigInt.fromString("0")
   }
   
   if(!userAdded){
@@ -187,11 +198,24 @@ export function handleUserAdded(event: UserAddedEvent): void {
 export function handleCampaignPublished(event: CampaignPublishedEvent): void {
   let campaignAdded = CampaignAdded.load(event.params._campaignAddress.toHexString())
   let crowdFunder = CrowdFunder.load(cdf)
+  let userAdded = UserAdded.load(event.params._creator.toHexString())
+
+  if(!userAdded){
+    userAdded = new UserAdded(event.params._creator.toHexString())
+    userAdded.address = event.params._creator
+    userAdded.created = new Array<Bytes>(0)
+    userAdded.backed = new Array<Bytes>(0)
+    userAdded.createdCount = BigInt.fromString("0")
+    userAdded.backedCount = BigInt.fromString("0")
+    userAdded.createdAt = event.block.timestamp
+  }
+
   if(!crowdFunder){
     crowdFunder = new CrowdFunder(cdf)
     crowdFunder.trueAmount = BigInt.fromString("0")
     crowdFunder.campaignCount = BigInt.fromString("0")
     crowdFunder.donationCount = BigInt.fromString("0")
+    crowdFunder.creatorCount = BigInt.fromString("0")
   }
 
   if(campaignAdded){  
@@ -199,7 +223,16 @@ export function handleCampaignPublished(event: CampaignPublishedEvent): void {
     campaignAdded.save()
   }
 
+  if(userAdded.createdCount!.equals(BigInt.fromString("0"))){
+    // on first publish
+    crowdFunder.creatorCount = crowdFunder.creatorCount!.plus(BigInt.fromString("1"))
+  }
+
+  userAdded.createdCount = userAdded.createdCount!.plus(BigInt.fromString("1"))
+  // only published
+
   crowdFunder.campaignCount = crowdFunder.campaignCount!.plus(BigInt.fromString("1"))
 
   crowdFunder.save()
+  userAdded.save()
 }
