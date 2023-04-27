@@ -81,6 +81,12 @@
         "internalType": "address",
         "name": "_campaignAddress",
         "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_val",
+        "type": "uint256"
       }
     ],
     "name": "CampaignFunded",
@@ -126,6 +132,12 @@
         "internalType": "address",
         "name": "_campaignAddress",
         "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_val",
+        "type": "uint256"
       }
     ],
     "name": "CampaignShrunk",
@@ -306,7 +318,7 @@
       },
       {
         "internalType": "address",
-        "name": "_donator",
+        "name": "_collector",
         "type": "address"
       }
     ],
