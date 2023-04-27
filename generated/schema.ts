@@ -59,8 +59,8 @@ export class CrowdFunder extends Entity {
     }
   }
 
-  get amountDonated(): BigInt | null {
-    let value = this.get("amountDonated");
+  get trueAmount(): BigInt | null {
+    let value = this.get("trueAmount");
     if (!value || value.kind == ValueKind.NULL) {
       return null;
     } else {
@@ -68,11 +68,11 @@ export class CrowdFunder extends Entity {
     }
   }
 
-  set amountDonated(value: BigInt | null) {
+  set trueAmount(value: BigInt | null) {
     if (!value) {
-      this.unset("amountDonated");
+      this.unset("trueAmount");
     } else {
-      this.set("amountDonated", Value.fromBigInt(<BigInt>value));
+      this.set("trueAmount", Value.fromBigInt(<BigInt>value));
     }
   }
 
@@ -90,6 +90,23 @@ export class CrowdFunder extends Entity {
       this.unset("donationCount");
     } else {
       this.set("donationCount", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get creatorCount(): BigInt | null {
+    let value = this.get("creatorCount");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set creatorCount(value: BigInt | null) {
+    if (!value) {
+      this.unset("creatorCount");
+    } else {
+      this.set("creatorCount", Value.fromBigInt(<BigInt>value));
     }
   }
 }

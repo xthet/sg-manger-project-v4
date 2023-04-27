@@ -68,6 +68,10 @@ export class CampaignFunded__Params {
   get _campaignAddress(): Address {
     return this._event.parameters[1].value.toAddress();
   }
+
+  get _val(): BigInt {
+    return this._event.parameters[2].value.toBigInt();
+  }
 }
 
 export class CampaignPublished extends ethereum.Event {
@@ -125,6 +129,10 @@ export class CampaignShrunk__Params {
 
   get _campaignAddress(): Address {
     return this._event.parameters[1].value.toAddress();
+  }
+
+  get _val(): BigInt {
+    return this._event.parameters[2].value.toBigInt();
   }
 }
 
@@ -406,7 +414,7 @@ export class RefundFromCampaignCall__Inputs {
     return this._call.inputValues[0].value.toAddress();
   }
 
-  get _donator(): Address {
+  get _collector(): Address {
     return this._call.inputValues[1].value.toAddress();
   }
 }

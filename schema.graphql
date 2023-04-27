@@ -11,7 +11,7 @@ type _Schema_ @fulltext(
 type CrowdFunder @entity {
   id:ID!
   campaignCount: BigInt
-  amountDonated: BigInt
+  trueAmount: BigInt
   donationCount: BigInt
   creatorCount: BigInt
 }
