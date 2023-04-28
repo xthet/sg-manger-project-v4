@@ -13,7 +13,7 @@ import {
   CrowdFunder
 } from "../generated/schema"
 
-const cdf = "0x7eCAc38204222d9424877AD7E93Af14094a79b9d"
+const cdf = "0xE6176316bd66A28E44F9Cb653188382dd3f4e6B4"
 
 export function handleCampaignAdded(event: CampaignAddedEvent): void {
   let campaignAdded = CampaignAdded.load(event.params._campaignAddress.toHexString())
@@ -153,7 +153,9 @@ export function handleCampaignShrunk(event: CampaignShrunkEvent): void {
   }
   campaignAdded!.funders = cmpFunders
 
-  campaignAdded!.funderCount.minus(BigInt.fromString("1"))
+  if(campaignAdded!.funderCount.gt(BigInt.fromString("0"))){
+    campaignAdded!.funderCount.minus(BigInt.fromString("1"))
+  }
 
   let backers = userAdded.backed
   if(backers.includes(event.params._campaignAddress)){
@@ -162,7 +164,9 @@ export function handleCampaignShrunk(event: CampaignShrunkEvent): void {
   }
   userAdded.backed = backers
 
-  userAdded.backedCount = userAdded.backedCount!.minus(BigInt.fromString("1"))
+  if(userAdded.backedCount!.gt(BigInt.fromString("0"))){
+    userAdded.backedCount = userAdded.backedCount!.minus(BigInt.fromString("1"))
+  }
  
   crowdFunder.donationCount = crowdFunder.donationCount!.minus(BigInt.fromString("1"))
   crowdFunder.trueAmount = crowdFunder.trueAmount!.minus(event.params._val)
@@ -191,6 +195,7 @@ export function handleUserAdded(event: UserAddedEvent): void {
   userAdded.email = event.params._email
   userAdded.homeAddr = event.params._homeAddress
   userAdded.createdAt = event.block.timestamp
+  userAdded.pfp = event.params._pfp
 
   userAdded.save()
 }

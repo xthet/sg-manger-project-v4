@@ -8,9 +8,9 @@ dataSources:
     name: CrowdFunder
     network: sepolia
     source:
-      address: "0x7eCAc38204222d9424877AD7E93Af14094a79b9d"
+      address: "0xE6176316bd66A28E44F9Cb653188382dd3f4e6B4"
       abi: CrowdFunder
-      startBlock: 3375509
+      startBlock: 3377285
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -36,6 +36,6 @@ dataSources:
           handler: handleCampaignRemoved
         - event: CampaignShrunk(indexed address,indexed address,uint256)
           handler: handleCampaignShrunk
-        - event: UserAdded(indexed address,string,string,string,string)
+        - event: UserAdded(indexed address,string,string,string,string,string)
           handler: handleUserAdded
       file: CrowdFunder\CrowdFunder.wasm
