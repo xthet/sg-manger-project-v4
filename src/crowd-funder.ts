@@ -154,7 +154,7 @@ export function handleCampaignShrunk(event: CampaignShrunkEvent): void {
   campaignAdded!.funders = cmpFunders
 
   if(campaignAdded!.funderCount.gt(BigInt.fromString("0"))){
-    campaignAdded!.funderCount.minus(BigInt.fromString("1"))
+    campaignAdded!.funderCount = campaignAdded!.funderCount.minus(BigInt.fromString("1"))
   }
 
   let backers = userAdded.backed
