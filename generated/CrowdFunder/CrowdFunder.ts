@@ -417,10 +417,6 @@ export class RefundFromCampaignCall__Inputs {
   get _campaignAddress(): Address {
     return this._call.inputValues[0].value.toAddress();
   }
-
-  get _collector(): Address {
-    return this._call.inputValues[1].value.toAddress();
-  }
 }
 
 export class RefundFromCampaignCall__Outputs {
