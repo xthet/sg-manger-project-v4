@@ -8,9 +8,9 @@ dataSources:
     name: CrowdFunder
     network: sepolia
     source:
-      address: "0xE4AB09CE7061fda56306Ac34CA021395D325b038"
+      address: "0x34eB557D924DE7fFf19C56036A23Eeaef48dBE3d"
       abi: CrowdFunder
-      startBlock: 3409471
+      startBlock: 3412797
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7

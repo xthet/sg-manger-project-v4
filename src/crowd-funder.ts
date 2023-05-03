@@ -13,7 +13,7 @@ import {
   CrowdFunder
 } from "../generated/schema"
 
-const cdf = "0xE4AB09CE7061fda56306Ac34CA021395D325b038"
+const cdf = "0x34eB557D924DE7fFf19C56036A23Eeaef48dBE3d"
 
 export function handleCampaignAdded(event: CampaignAddedEvent): void {
   let campaignAdded = CampaignAdded.load(event.params._campaignAddress.toHexString())
