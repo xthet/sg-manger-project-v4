@@ -24,6 +24,7 @@ type CampaignAdded @entity {
   description: String!
   category: String!
   tags: String!
+  imageURI: String!
   funders: [Bytes!]!
   funderCount: BigInt!
   createdAt: BigInt!

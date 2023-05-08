@@ -62,6 +62,12 @@
         "internalType": "string",
         "name": "_tags",
         "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "_imageURI",
+        "type": "string"
       }
     ],
     "name": "CampaignAdded",
