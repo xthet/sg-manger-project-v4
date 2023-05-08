@@ -13,7 +13,7 @@ import {
   CrowdFunder
 } from "../generated/schema"
 
-const cdf = "0x34eB557D924DE7fFf19C56036A23Eeaef48dBE3d"
+const cdf = "0xb3a2098Bc20B46C63f39485F618831645DE53703"
 
 export function handleCampaignAdded(event: CampaignAddedEvent): void {
   let campaignAdded = CampaignAdded.load(event.params._campaignAddress.toHexString())
@@ -50,6 +50,7 @@ export function handleCampaignAdded(event: CampaignAddedEvent): void {
   campaignAdded.description = event.params._description
   campaignAdded.category = event.params._category
   campaignAdded.tags = event.params._tags
+  campaignAdded.imageURI = event.params._imageURI
 
   let createdCmps = userAdded.created
   createdCmps.push(event.params._campaignAddress)

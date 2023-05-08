@@ -46,6 +46,10 @@ export class CampaignAdded__Params {
   get _tags(): string {
     return this._event.parameters[5].value.toString();
   }
+
+  get _imageURI(): string {
+    return this._event.parameters[6].value.toString();
+  }
 }
 
 export class CampaignFunded extends ethereum.Event {

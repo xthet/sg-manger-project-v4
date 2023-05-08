@@ -196,6 +196,15 @@ export class CampaignAdded extends Entity {
     this.set("tags", Value.fromString(value));
   }
 
+  get imageURI(): string {
+    let value = this.get("imageURI");
+    return value!.toString();
+  }
+
+  set imageURI(value: string) {
+    this.set("imageURI", Value.fromString(value));
+  }
+
   get funders(): Array<Bytes> {
     let value = this.get("funders");
     return value!.toBytesArray();
