@@ -56,8 +56,6 @@ export function handleCampaignAdded(event: CampaignAddedEvent): void {
   userAdded.created = createdCmps
   // both published and drafts
 
-  crowdFunder.campaignCount = crowdFunder.campaignCount!.plus(BigInt.fromString("1"))
-
   userAdded.save()
   campaignAdded.save()
   crowdFunder.save()
@@ -98,6 +96,7 @@ export function handleCampaignFunded(event: CampaignFundedEvent): void {
   }
 
   if(!(userAdded.backed.includes(event.params._campaignAddress))){  
+    // if not initially present in backed array 
     let backers = userAdded.backed
     backers.push(event.params._campaignAddress)
     userAdded.backed = backers
