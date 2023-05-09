@@ -26,7 +26,6 @@ export function handleCampaignAdded(event: CampaignAddedEvent): void {
     crowdFunder.donationCount = BigInt.fromString("0")
     crowdFunder.creatorCount = BigInt.fromString("0")
   }
-
   if(!campaignAdded){
     campaignAdded = new CampaignAdded(event.params._campaignAddress.toHexString())
     campaignAdded.funderCount = BigInt.fromString("0")
@@ -57,6 +56,7 @@ export function handleCampaignAdded(event: CampaignAddedEvent): void {
   userAdded.created = createdCmps
   // both published and drafts
 
+  crowdFunder.campaignCount = crowdFunder.campaignCount!.plus(BigInt.fromString("1"))
 
   userAdded.save()
   campaignAdded.save()
@@ -97,11 +97,12 @@ export function handleCampaignFunded(event: CampaignFundedEvent): void {
     campaignAdded!.funderCount = campaignAdded!.funderCount.plus(BigInt.fromString("1"))
   }
 
-  let backers = userAdded.backed
-  backers.push(event.params._campaignAddress)
-  userAdded.backed = backers
-
-  userAdded.backedCount = userAdded.backedCount!.plus(BigInt.fromString("1"))
+  if(!(userAdded.backed.includes(event.params._campaignAddress))){  
+    let backers = userAdded.backed
+    backers.push(event.params._campaignAddress)
+    userAdded.backed = backers
+    userAdded.backedCount = userAdded.backedCount!.plus(BigInt.fromString("1"))
+  }  
 
   campaignAdded!.save()
   crowdFunder.save()
@@ -119,9 +120,9 @@ export function handleCampaignRemoved(event: CampaignRemovedEvent): void {
     crowdFunder.donationCount = BigInt.fromString("0")
     crowdFunder.creatorCount = BigInt.fromString("0")
   }
-  if(campaignAdded!.published){
-    crowdFunder.campaignCount = crowdFunder.campaignCount!.minus(BigInt.fromString("1"))
-  }
+  // if(campaignAdded!.published){
+  //   crowdFunder.campaignCount = crowdFunder.campaignCount!.minus(BigInt.fromString("1"))
+  // }
 
   store.remove("CampaignAdded", id)
   crowdFunder.save()
