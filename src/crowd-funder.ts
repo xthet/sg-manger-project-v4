@@ -147,6 +147,11 @@ export function handleCampaignShrunk(event: CampaignShrunkEvent): void {
     userAdded.createdAt = event.block.timestamp
   }
 
+  if((campaignAdded!.funderCount.gt(BigInt.fromString("0"))) && (campaignAdded!.funders.includes(event.params._withdrawer))){
+    // if funder in array
+    campaignAdded!.funderCount = campaignAdded!.funderCount.minus(BigInt.fromString("1"))
+  }
+
   let cmpFunders = campaignAdded!.funders
   if(cmpFunders.includes(event.params._withdrawer)){
     const index = cmpFunders.indexOf(event.params._withdrawer)
@@ -154,9 +159,7 @@ export function handleCampaignShrunk(event: CampaignShrunkEvent): void {
   }
   campaignAdded!.funders = cmpFunders
 
-  if(campaignAdded!.funderCount.gt(BigInt.fromString("0"))){
-    campaignAdded!.funderCount = campaignAdded!.funderCount.minus(BigInt.fromString("1"))
-  }
+
 
   let backers = userAdded.backed
   if(backers.includes(event.params._campaignAddress)){
