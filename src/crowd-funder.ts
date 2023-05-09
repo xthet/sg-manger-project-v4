@@ -88,11 +88,14 @@ export function handleCampaignFunded(event: CampaignFundedEvent): void {
   crowdFunder.donationCount = crowdFunder.donationCount!.plus(BigInt.fromString("1"))
   crowdFunder.trueAmount = crowdFunder.trueAmount!.plus(event.params._val)
 
-  let cmpFunders = campaignAdded!.funders
-  cmpFunders.push(event.params._funder)
-  campaignAdded!.funders = cmpFunders
+  if(!(campaignAdded!.funders.includes(event.params._funder))){
+    // if not initially present in funders array (only unique funders)
+    let cmpFunders = campaignAdded!.funders
+    cmpFunders.push(event.params._funder)
+    campaignAdded!.funders = cmpFunders
 
-  campaignAdded!.funderCount = campaignAdded!.funderCount.plus(BigInt.fromString("1"))
+    campaignAdded!.funderCount = campaignAdded!.funderCount.plus(BigInt.fromString("1"))
+  }
 
   let backers = userAdded.backed
   backers.push(event.params._campaignAddress)
@@ -148,7 +151,7 @@ export function handleCampaignShrunk(event: CampaignShrunkEvent): void {
   }
 
   if((campaignAdded!.funderCount.gt(BigInt.fromString("0"))) && (campaignAdded!.funders.includes(event.params._withdrawer))){
-    // if funder in array
+    // if funder in array and funders > 0
     campaignAdded!.funderCount = campaignAdded!.funderCount.minus(BigInt.fromString("1"))
   }
 
