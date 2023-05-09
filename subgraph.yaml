@@ -10,7 +10,7 @@ dataSources:
     source:
       address: "0xb3a2098Bc20B46C63f39485F618831645DE53703"
       abi: CrowdFunder
-      startBlock: 3412797
+      startBlock: 3444107
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
