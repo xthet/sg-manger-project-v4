@@ -38,7 +38,7 @@ export function handleCampaignAdded(event: CampaignAddedEvent): void {
     userAdded.address = event.params._creator
     userAdded.created = new Array<Bytes>(0)
     userAdded.backed = new Array<Bytes>(0)
-    userAdded.createdCount = BigInt.fromString("0")
+    userAdded.publishedCount = BigInt.fromString("0")
     userAdded.backedCount = BigInt.fromString("0")
     userAdded.createdAt = event.block.timestamp
   }
@@ -78,7 +78,7 @@ export function handleCampaignFunded(event: CampaignFundedEvent): void {
     userAdded.address = event.params._funder
     userAdded.created = new Array<Bytes>(0)
     userAdded.backed = new Array<Bytes>(0)
-    userAdded.createdCount = BigInt.fromString("0")
+    userAdded.publishedCount = BigInt.fromString("0")
     userAdded.backedCount = BigInt.fromString("0")
     userAdded.createdAt = event.block.timestamp
   }
@@ -101,7 +101,9 @@ export function handleCampaignFunded(event: CampaignFundedEvent): void {
     backers.push(event.params._campaignAddress)
     userAdded.backed = backers
     userAdded.backedCount = userAdded.backedCount!.plus(BigInt.fromString("1"))
-  }  
+  }
+
+  userAdded.totalRaised = userAdded.totalRaised.plus(event.params._val)
 
   campaignAdded!.save()
   crowdFunder.save()
@@ -145,7 +147,7 @@ export function handleCampaignShrunk(event: CampaignShrunkEvent): void {
     userAdded.address = event.params._withdrawer
     userAdded.created = new Array<Bytes>(0)
     userAdded.backed = new Array<Bytes>(0)
-    userAdded.createdCount = BigInt.fromString("0")
+    userAdded.publishedCount = BigInt.fromString("0")
     userAdded.backedCount = BigInt.fromString("0")
     userAdded.createdAt = event.block.timestamp
   }
@@ -162,7 +164,7 @@ export function handleCampaignShrunk(event: CampaignShrunkEvent): void {
   }
   campaignAdded!.funders = cmpFunders
 
-
+  userAdded.totalRaised = userAdded.totalRaised.minus(event.params._val)
 
   let backers = userAdded.backed
   if(backers.includes(event.params._campaignAddress)){
@@ -191,7 +193,7 @@ export function handleUserAdded(event: UserAddedEvent): void {
     userAdded.address = event.params._address
     userAdded.created = new Array<Bytes>(0)
     userAdded.backed = new Array<Bytes>(0)
-    userAdded.createdCount = BigInt.fromString("0")
+    userAdded.publishedCount = BigInt.fromString("0")
     userAdded.backedCount = BigInt.fromString("0")
     userAdded.createdAt = event.block.timestamp
   }
@@ -217,7 +219,7 @@ export function handleCampaignPublished(event: CampaignPublishedEvent): void {
     userAdded.address = event.params._creator
     userAdded.created = new Array<Bytes>(0)
     userAdded.backed = new Array<Bytes>(0)
-    userAdded.createdCount = BigInt.fromString("0")
+    userAdded.publishedCount = BigInt.fromString("0")
     userAdded.backedCount = BigInt.fromString("0")
     userAdded.createdAt = event.block.timestamp
   }
@@ -235,12 +237,19 @@ export function handleCampaignPublished(event: CampaignPublishedEvent): void {
     campaignAdded.save()
   }
 
-  if(userAdded.createdCount!.equals(BigInt.fromString("0"))){
+  if(userAdded.publishedCount!.equals(BigInt.fromString("0"))){
     // on first publish
     crowdFunder.creatorCount = crowdFunder.creatorCount!.plus(BigInt.fromString("1"))
   }
 
-  userAdded.createdCount = userAdded.createdCount!.plus(BigInt.fromString("1"))
+  if(!(userAdded.published.includes(event.params._campaignAddress))){  
+    // if not initially present in published array 
+    let published = userAdded.published
+    published.push(event.params._campaignAddress)
+    userAdded.published = published
+  }
+
+  userAdded.publishedCount = userAdded.publishedCount!.plus(BigInt.fromString("1"))
   // only published
 
   crowdFunder.campaignCount = crowdFunder.campaignCount!.plus(BigInt.fromString("1"))

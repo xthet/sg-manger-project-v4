@@ -28,7 +28,7 @@ type CampaignAdded @entity {
   funders: [Bytes!]!
   funderCount: BigInt!
   createdAt: BigInt!
-  published: Boolean!
+  isPublished: Boolean!
 }
 
 type CampaignFunded @entity {
@@ -60,7 +60,9 @@ type UserAdded @entity {
   homeAddr: String
   created: [Bytes!]!
   backed: [Bytes!]!
-  createdCount: BigInt
+  published: [Bytes!]!
+  totalRaised: BigInt!
+  publishedCount: BigInt
   backedCount: BigInt
   createdAt: BigInt!
   pfp: String
