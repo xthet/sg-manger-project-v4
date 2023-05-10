@@ -31,7 +31,7 @@ export function handleCampaignAdded(event: CampaignAddedEvent): void {
     campaignAdded.funderCount = BigInt.fromString("0")
     campaignAdded.funders = new Array<Bytes>(0)
     campaignAdded.createdAt = event.block.timestamp
-    campaignAdded.published = false
+    campaignAdded.isPublished = false
   }
   if(!userAdded){
     userAdded = new UserAdded(event.params._creator.toHexString())
@@ -231,7 +231,7 @@ export function handleCampaignPublished(event: CampaignPublishedEvent): void {
   }
 
   if(campaignAdded){  
-    campaignAdded.published = true
+    campaignAdded.isPublished = true
     campaignAdded.save()
   }
 

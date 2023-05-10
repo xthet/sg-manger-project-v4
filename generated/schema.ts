@@ -232,13 +232,13 @@ export class CampaignAdded extends Entity {
     this.set("createdAt", Value.fromBigInt(value));
   }
 
-  get published(): boolean {
-    let value = this.get("published");
+  get isPublished(): boolean {
+    let value = this.get("isPublished");
     return value!.toBoolean();
   }
 
-  set published(value: boolean) {
-    this.set("published", Value.fromBoolean(value));
+  set isPublished(value: boolean) {
+    this.set("isPublished", Value.fromBoolean(value));
   }
 }
 
@@ -280,6 +280,15 @@ export class CampaignFunded extends Entity {
 
   set funder(value: Bytes) {
     this.set("funder", Value.fromBytes(value));
+  }
+
+  get fAmount(): BigInt {
+    let value = this.get("fAmount");
+    return value!.toBigInt();
+  }
+
+  set fAmount(value: BigInt) {
+    this.set("fAmount", Value.fromBigInt(value));
   }
 
   get campaignAddress(): Bytes {
@@ -389,6 +398,15 @@ export class CampaignShrunk extends Entity {
 
   set withdrawer(value: Bytes) {
     this.set("withdrawer", Value.fromBytes(value));
+  }
+
+  get wAmount(): Bytes {
+    let value = this.get("wAmount");
+    return value!.toBytes();
+  }
+
+  set wAmount(value: Bytes) {
+    this.set("wAmount", Value.fromBytes(value));
   }
 
   get campaignAddress(): Bytes {
@@ -534,6 +552,24 @@ export class UserAdded extends Entity {
 
   set backed(value: Array<Bytes>) {
     this.set("backed", Value.fromBytesArray(value));
+  }
+
+  get published(): Array<Bytes> {
+    let value = this.get("published");
+    return value!.toBytesArray();
+  }
+
+  set published(value: Array<Bytes>) {
+    this.set("published", Value.fromBytesArray(value));
+  }
+
+  get totalRaised(): BigInt {
+    let value = this.get("totalRaised");
+    return value!.toBigInt();
+  }
+
+  set totalRaised(value: BigInt) {
+    this.set("totalRaised", Value.fromBigInt(value));
   }
 
   get createdCount(): BigInt | null {
