@@ -28,12 +28,13 @@ type CampaignAdded @entity {
   funders: [Bytes!]!
   funderCount: BigInt!
   createdAt: BigInt!
-  published: Boolean!
+  isPublished: Boolean!
 }
 
 type CampaignFunded @entity {
   id: ID!
   funder: Bytes!
+  fAmount: BigInt!
   campaignAddress: Bytes!
   createdAt: BigInt!
 }
@@ -47,6 +48,7 @@ type CampaignRemoved @entity {
 type CampaignShrunk @entity {
   id: ID!
   withdrawer: Bytes!
+  wAmount: Bytes!
   campaignAddress: Bytes!
   createdAt: BigInt!
 }
@@ -60,6 +62,8 @@ type UserAdded @entity {
   homeAddr: String
   created: [Bytes!]!
   backed: [Bytes!]!
+  published: [Bytes!]!
+  totalRaised: BigInt!
   createdCount: BigInt
   backedCount: BigInt
   createdAt: BigInt!
