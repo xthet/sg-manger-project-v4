@@ -34,7 +34,6 @@ type CampaignAdded @entity {
 type CampaignFunded @entity {
   id: ID!
   funder: Bytes!
-  fAmount: BigInt!
   campaignAddress: Bytes!
   createdAt: BigInt!
 }
@@ -48,7 +47,6 @@ type CampaignRemoved @entity {
 type CampaignShrunk @entity {
   id: ID!
   withdrawer: Bytes!
-  wAmount: Bytes!
   campaignAddress: Bytes!
   createdAt: BigInt!
 }
@@ -64,7 +62,7 @@ type UserAdded @entity {
   backed: [Bytes!]!
   published: [Bytes!]!
   totalRaised: BigInt!
-  createdCount: BigInt
+  publishedCount: BigInt
   backedCount: BigInt
   createdAt: BigInt!
   pfp: String

@@ -282,15 +282,6 @@ export class CampaignFunded extends Entity {
     this.set("funder", Value.fromBytes(value));
   }
 
-  get fAmount(): BigInt {
-    let value = this.get("fAmount");
-    return value!.toBigInt();
-  }
-
-  set fAmount(value: BigInt) {
-    this.set("fAmount", Value.fromBigInt(value));
-  }
-
   get campaignAddress(): Bytes {
     let value = this.get("campaignAddress");
     return value!.toBytes();
@@ -398,15 +389,6 @@ export class CampaignShrunk extends Entity {
 
   set withdrawer(value: Bytes) {
     this.set("withdrawer", Value.fromBytes(value));
-  }
-
-  get wAmount(): Bytes {
-    let value = this.get("wAmount");
-    return value!.toBytes();
-  }
-
-  set wAmount(value: Bytes) {
-    this.set("wAmount", Value.fromBytes(value));
   }
 
   get campaignAddress(): Bytes {
@@ -572,8 +554,8 @@ export class UserAdded extends Entity {
     this.set("totalRaised", Value.fromBigInt(value));
   }
 
-  get createdCount(): BigInt | null {
-    let value = this.get("createdCount");
+  get publishedCount(): BigInt | null {
+    let value = this.get("publishedCount");
     if (!value || value.kind == ValueKind.NULL) {
       return null;
     } else {
@@ -581,11 +563,11 @@ export class UserAdded extends Entity {
     }
   }
 
-  set createdCount(value: BigInt | null) {
+  set publishedCount(value: BigInt | null) {
     if (!value) {
-      this.unset("createdCount");
+      this.unset("publishedCount");
     } else {
-      this.set("createdCount", Value.fromBigInt(<BigInt>value));
+      this.set("publishedCount", Value.fromBigInt(<BigInt>value));
     }
   }
 
