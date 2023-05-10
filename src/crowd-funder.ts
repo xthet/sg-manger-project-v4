@@ -196,6 +196,7 @@ export function handleUserAdded(event: UserAddedEvent): void {
     userAdded.address = event.params._address
     userAdded.created = new Array<Bytes>(0)
     userAdded.backed = new Array<Bytes>(0)
+    userAdded.totalRaised = BigInt.fromString("0")
     userAdded.publishedCount = BigInt.fromString("0")
     userAdded.backedCount = BigInt.fromString("0")
     userAdded.createdAt = event.block.timestamp
@@ -222,6 +223,7 @@ export function handleCampaignPublished(event: CampaignPublishedEvent): void {
     userAdded.address = event.params._creator
     userAdded.created = new Array<Bytes>(0)
     userAdded.backed = new Array<Bytes>(0)
+    userAdded.totalRaised = BigInt.fromString("0")
     userAdded.publishedCount = BigInt.fromString("0")
     userAdded.backedCount = BigInt.fromString("0")
     userAdded.createdAt = event.block.timestamp
