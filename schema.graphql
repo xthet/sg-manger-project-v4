@@ -60,7 +60,6 @@ type UserAdded @entity {
   homeAddr: String
   created: [Bytes!]!
   backed: [Bytes!]!
-  published: [Bytes!]!
   totalRaised: BigInt!
   publishedCount: BigInt
   backedCount: BigInt

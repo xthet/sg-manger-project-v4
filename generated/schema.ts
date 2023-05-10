@@ -536,15 +536,6 @@ export class UserAdded extends Entity {
     this.set("backed", Value.fromBytesArray(value));
   }
 
-  get published(): Array<Bytes> {
-    let value = this.get("published");
-    return value!.toBytesArray();
-  }
-
-  set published(value: Array<Bytes>) {
-    this.set("published", Value.fromBytesArray(value));
-  }
-
   get totalRaised(): BigInt {
     let value = this.get("totalRaised");
     return value!.toBigInt();
