@@ -61,6 +61,7 @@ type UserAdded @entity {
   created: [Bytes!]!
   backed: [Bytes!]!
   totalRaised: BigInt!
+  totalDonated: BigInt!
   publishedCount: BigInt
   backedCount: BigInt
   createdAt: BigInt!
