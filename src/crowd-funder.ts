@@ -144,7 +144,7 @@ export function handleCampaignShrunk(event: CampaignShrunkEvent): void {
     crowdFunder.creatorCount = BigInt.fromString("0")
   }
   
-  if(!userAdded){
+  if(!userAdded){  // withdrawer
     userAdded = new UserAdded(event.params._withdrawer.toHexString())
     userAdded.address = event.params._withdrawer
     userAdded.created = new Array<Bytes>(0)
