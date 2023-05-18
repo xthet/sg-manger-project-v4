@@ -55,9 +55,8 @@ type UserAdded @entity {
   id: ID!
   address: Bytes!
   username: String
-  twitter: String
   email: String
-  homeAddr: String
+  shipAddr: String
   created: [Bytes!]!
   backed: [Bytes!]!
   totalRaised: BigInt!
