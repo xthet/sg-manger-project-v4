@@ -65,7 +65,8 @@ export function handleCampaignAdded(event: CampaignAddedEvent): void {
 
 export function handleCampaignFunded(event: CampaignFundedEvent): void {
   let campaignAdded = CampaignAdded.load(event.params._campaignAddress.toHexString())
-  let userAdded = UserAdded.load(event.params._funder.toHexString())
+  let i_funder = UserAdded.load(event.params._funder.toHexString())
+  let i_creator = UserAdded.load(event.params._c_creator.toHexString())
   let crowdFunder = CrowdFunder.load(cdf)
   if(!crowdFunder){
     crowdFunder = new CrowdFunder(cdf)
@@ -75,16 +76,28 @@ export function handleCampaignFunded(event: CampaignFundedEvent): void {
     crowdFunder.creatorCount = BigInt.fromString("0")
   }
 
-  if(!userAdded){
-    userAdded = new UserAdded(event.params._funder.toHexString())
-    userAdded.address = event.params._funder
-    userAdded.created = new Array<Bytes>(0)
-    userAdded.backed = new Array<Bytes>(0)
-    userAdded.totalRaised = BigInt.fromString("0")
-    userAdded.totalDonated = BigInt.fromString("0")
-    userAdded.publishedCount = BigInt.fromString("0")
-    userAdded.backedCount = BigInt.fromString("0")
-    userAdded.createdAt = event.block.timestamp
+  if(!i_funder){
+    i_funder = new UserAdded(event.params._funder.toHexString())
+    i_funder.address = event.params._funder
+    i_funder.created = new Array<Bytes>(0)
+    i_funder.backed = new Array<Bytes>(0)
+    i_funder.totalRaised = BigInt.fromString("0")
+    i_funder.totalDonated = BigInt.fromString("0")
+    i_funder.publishedCount = BigInt.fromString("0")
+    i_funder.backedCount = BigInt.fromString("0")
+    i_funder.createdAt = event.block.timestamp
+  }
+
+  if(!i_creator){
+    i_creator = new UserAdded(event.params._c_creator.toHexString())
+    i_creator.address = event.params._c_creator
+    i_creator.created = new Array<Bytes>(0)
+    i_creator.backed = new Array<Bytes>(0)
+    i_creator.totalRaised = BigInt.fromString("0")
+    i_creator.totalDonated = BigInt.fromString("0")
+    i_creator.publishedCount = BigInt.fromString("0")
+    i_creator.backedCount = BigInt.fromString("0")
+    i_creator.createdAt = event.block.timestamp
   }
 
   crowdFunder.donationCount = crowdFunder.donationCount!.plus(BigInt.fromString("1"))
@@ -99,19 +112,23 @@ export function handleCampaignFunded(event: CampaignFundedEvent): void {
     campaignAdded!.funderCount = campaignAdded!.funderCount.plus(BigInt.fromString("1"))
   }
 
-  if(!(userAdded.backed.includes(event.params._campaignAddress))){  
+  // funder adds a new cmp to his backed array
+  if(!(i_funder.backed.includes(event.params._campaignAddress))){  
     // if not initially present in backed array 
-    let backers = userAdded.backed
+    let backers = i_funder.backed
     backers.push(event.params._campaignAddress)
-    userAdded.backed = backers
-    userAdded.backedCount = userAdded.backedCount!.plus(BigInt.fromString("1"))
+    i_funder.backed = backers
+    i_funder.backedCount = i_funder.backedCount!.plus(BigInt.fromString("1"))
   }
+  i_funder.totalDonated = i_funder.totalDonated.plus(event.params._val)
 
-  userAdded.totalRaised = userAdded.totalRaised.plus(event.params._val)
+  // cmp creator gains some funding
+  i_creator.totalRaised = i_creator.totalRaised.plus(event.params._val)
 
   campaignAdded!.save()
   crowdFunder.save()
-  userAdded.save()
+  i_creator.save()
+  i_funder.save()
 }
 
 export function handleCampaignRemoved(event: CampaignRemovedEvent): void {
@@ -124,7 +141,8 @@ export function handleCampaignRemoved(event: CampaignRemovedEvent): void {
 
 export function handleCampaignShrunk(event: CampaignShrunkEvent): void {
   let campaignAdded = CampaignAdded.load(event.params._campaignAddress.toHexString())
-  let userAdded = UserAdded.load(event.params._withdrawer.toHexString())
+  let i_withdrawer = UserAdded.load(event.params._withdrawer.toHexString())
+  let i_creator = UserAdded.load(event.params._c_creator.toHexString())
   let crowdFunder = CrowdFunder.load(cdf)
 
   if(!crowdFunder){
@@ -135,16 +153,28 @@ export function handleCampaignShrunk(event: CampaignShrunkEvent): void {
     crowdFunder.creatorCount = BigInt.fromString("0")
   }
   
-  if(!userAdded){
-    userAdded = new UserAdded(event.params._withdrawer.toHexString())
-    userAdded.address = event.params._withdrawer
-    userAdded.created = new Array<Bytes>(0)
-    userAdded.backed = new Array<Bytes>(0)
-    userAdded.totalRaised = BigInt.fromString("0")
-    userAdded.totalDonated = BigInt.fromString("0")
-    userAdded.publishedCount = BigInt.fromString("0")
-    userAdded.backedCount = BigInt.fromString("0")
-    userAdded.createdAt = event.block.timestamp
+  if(!i_withdrawer){
+    i_withdrawer = new UserAdded(event.params._withdrawer.toHexString())
+    i_withdrawer.address = event.params._withdrawer
+    i_withdrawer.created = new Array<Bytes>(0)
+    i_withdrawer.backed = new Array<Bytes>(0)
+    i_withdrawer.totalRaised = BigInt.fromString("0")
+    i_withdrawer.totalDonated = BigInt.fromString("0")
+    i_withdrawer.publishedCount = BigInt.fromString("0")
+    i_withdrawer.backedCount = BigInt.fromString("0")
+    i_withdrawer.createdAt = event.block.timestamp
+  }
+
+  if(!i_creator){
+    i_creator = new UserAdded(event.params._c_creator.toHexString())
+    i_creator.address = event.params._c_creator
+    i_creator.created = new Array<Bytes>(0)
+    i_creator.backed = new Array<Bytes>(0)
+    i_creator.totalRaised = BigInt.fromString("0")
+    i_creator.totalDonated = BigInt.fromString("0")
+    i_creator.publishedCount = BigInt.fromString("0")
+    i_creator.backedCount = BigInt.fromString("0")
+    i_creator.createdAt = event.block.timestamp
   }
 
   if((campaignAdded!.funderCount.gt(BigInt.fromString("0"))) && (campaignAdded!.funders.includes(event.params._withdrawer))){
@@ -152,6 +182,7 @@ export function handleCampaignShrunk(event: CampaignShrunkEvent): void {
     campaignAdded!.funderCount = campaignAdded!.funderCount.minus(BigInt.fromString("1"))
   }
 
+  // this cmp is no longer funded by withdrawer
   let cmpFunders = campaignAdded!.funders
   if(cmpFunders.includes(event.params._withdrawer)){
     const index = cmpFunders.indexOf(event.params._withdrawer)
@@ -159,25 +190,30 @@ export function handleCampaignShrunk(event: CampaignShrunkEvent): void {
   }
   campaignAdded!.funders = cmpFunders
 
-  userAdded.totalRaised = userAdded.totalRaised.minus(event.params._val)
+  // creator has lost some funding
+  i_creator.totalRaised = i_creator.totalRaised.minus(event.params._val)
 
-  let backers = userAdded.backed
+  // withdrawer no longer backs this cmp
+  let backers = i_withdrawer.backed
   if(backers.includes(event.params._campaignAddress)){
     const index = backers.indexOf(event.params._campaignAddress)
     backers.splice(index, 1)
   }
-  userAdded.backed = backers
+  i_withdrawer.backed = backers
 
-  if(userAdded.backedCount!.gt(BigInt.fromString("0"))){
-    userAdded.backedCount = userAdded.backedCount!.minus(BigInt.fromString("1"))
+  if(i_withdrawer.backedCount!.gt(BigInt.fromString("0"))){
+    i_withdrawer.backedCount = i_withdrawer.backedCount!.minus(BigInt.fromString("1"))
   }
+
+  i_withdrawer.totalDonated = i_withdrawer.totalDonated.minus(event.params._val)
  
   crowdFunder.donationCount = crowdFunder.donationCount!.minus(BigInt.fromString("1"))
   crowdFunder.trueAmount = crowdFunder.trueAmount!.minus(event.params._val)
 
   campaignAdded!.save()
   crowdFunder.save()
-  userAdded.save()
+  i_creator.save()
+  i_withdrawer.save()
 }
 
 export function handleUserAdded(event: UserAddedEvent): void {
