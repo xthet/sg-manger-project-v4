@@ -28,14 +28,14 @@ dataSources:
       eventHandlers:
         - event: CampaignAdded(indexed address,indexed address,string,string,string,string,string)
           handler: handleCampaignAdded
-        - event: CampaignFunded(indexed address,indexed address,uint256)
+        - event: CampaignFunded(indexed address,indexed address,uint256,indexed address)
           handler: handleCampaignFunded
         - event: CampaignPublished(address,address)
           handler: handleCampaignPublished
         - event: CampaignRemoved(indexed address)
           handler: handleCampaignRemoved
-        - event: CampaignShrunk(indexed address,indexed address,uint256)
+        - event: CampaignShrunk(indexed address,indexed address,uint256,indexed address)
           handler: handleCampaignShrunk
-        - event: UserAdded(indexed address,string,string,string,string,string)
+        - event: UserAdded(indexed address,string,string,string,string)
           handler: handleUserAdded
       file: ./src/crowd-funder.ts
