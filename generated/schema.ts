@@ -467,23 +467,6 @@ export class UserAdded extends Entity {
     }
   }
 
-  get twitter(): string | null {
-    let value = this.get("twitter");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toString();
-    }
-  }
-
-  set twitter(value: string | null) {
-    if (!value) {
-      this.unset("twitter");
-    } else {
-      this.set("twitter", Value.fromString(<string>value));
-    }
-  }
-
   get email(): string | null {
     let value = this.get("email");
     if (!value || value.kind == ValueKind.NULL) {
@@ -501,8 +484,8 @@ export class UserAdded extends Entity {
     }
   }
 
-  get homeAddr(): string | null {
-    let value = this.get("homeAddr");
+  get shipAddr(): string | null {
+    let value = this.get("shipAddr");
     if (!value || value.kind == ValueKind.NULL) {
       return null;
     } else {
@@ -510,11 +493,11 @@ export class UserAdded extends Entity {
     }
   }
 
-  set homeAddr(value: string | null) {
+  set shipAddr(value: string | null) {
     if (!value) {
-      this.unset("homeAddr");
+      this.unset("shipAddr");
     } else {
-      this.set("homeAddr", Value.fromString(<string>value));
+      this.set("shipAddr", Value.fromString(<string>value));
     }
   }
 
@@ -543,6 +526,15 @@ export class UserAdded extends Entity {
 
   set totalRaised(value: BigInt) {
     this.set("totalRaised", Value.fromBigInt(value));
+  }
+
+  get totalDonated(): BigInt {
+    let value = this.get("totalDonated");
+    return value!.toBigInt();
+  }
+
+  set totalDonated(value: BigInt) {
+    this.set("totalDonated", Value.fromBigInt(value));
   }
 
   get publishedCount(): BigInt | null {

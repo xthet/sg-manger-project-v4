@@ -10,10 +10,10 @@ type _Schema_ @fulltext(
 
 type CrowdFunder @entity {
   id:ID!
-  campaignCount: BigInt
-  trueAmount: BigInt
-  donationCount: BigInt
-  creatorCount: BigInt
+  campaignCount: BigInt # --
+  trueAmount: BigInt # --
+  donationCount: BigInt # --
+  creatorCount: BigInt # --
 }
 
 type CampaignAdded @entity {
@@ -25,10 +25,10 @@ type CampaignAdded @entity {
   category: String!
   tags: String!
   imageURI: String!
-  funders: [Bytes!]!
-  funderCount: BigInt!
-  createdAt: BigInt!
-  isPublished: Boolean!
+  funders: [Bytes!]! # --
+  funderCount: BigInt! # --
+  createdAt: BigInt! # -- 
+  isPublished: Boolean! # --
 }
 
 type CampaignFunded @entity {
@@ -56,15 +56,15 @@ type UserAdded @entity {
   address: Bytes!
   username: String
   email: String
-  shipAddr: String
-  created: [Bytes!]!
-  backed: [Bytes!]!
-  totalRaised: BigInt!
-  totalDonated: BigInt!
-  publishedCount: BigInt
-  backedCount: BigInt
-  createdAt: BigInt!
-  pfp: String
+  shipAddr: String # shipping address
+  created: [Bytes!]! # cmps youve created --
+  backed: [Bytes!]! # cmps youve backed --
+  totalRaised: BigInt! # total amount raised across all cmps --
+  totalDonated: BigInt! # total donated across all cmps --
+  publishedCount: BigInt # amount of cmps published --
+  backedCount: BigInt # amount of cmps backed --
+  createdAt: BigInt! # date user created account --
+  pfp: String # user pfp
 }
 
 type CampaignPublished @entity {

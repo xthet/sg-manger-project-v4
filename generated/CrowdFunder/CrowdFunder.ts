@@ -76,6 +76,10 @@ export class CampaignFunded__Params {
   get _val(): BigInt {
     return this._event.parameters[2].value.toBigInt();
   }
+
+  get _c_creator(): Address {
+    return this._event.parameters[3].value.toAddress();
+  }
 }
 
 export class CampaignPublished extends ethereum.Event {
@@ -142,6 +146,10 @@ export class CampaignShrunk__Params {
   get _val(): BigInt {
     return this._event.parameters[2].value.toBigInt();
   }
+
+  get _c_creator(): Address {
+    return this._event.parameters[3].value.toAddress();
+  }
 }
 
 export class UserAdded extends ethereum.Event {
@@ -165,20 +173,16 @@ export class UserAdded__Params {
     return this._event.parameters[1].value.toString();
   }
 
-  get _twitter(): string {
+  get _email(): string {
     return this._event.parameters[2].value.toString();
   }
 
-  get _email(): string {
+  get _shipAddress(): string {
     return this._event.parameters[3].value.toString();
   }
 
-  get _homeAddress(): string {
-    return this._event.parameters[4].value.toString();
-  }
-
   get _pfp(): string {
-    return this._event.parameters[5].value.toString();
+    return this._event.parameters[4].value.toString();
   }
 }
 
@@ -290,20 +294,16 @@ export class AddUserCall__Inputs {
     return this._call.inputValues[1].value.toString();
   }
 
-  get _twitter(): string {
+  get _email(): string {
     return this._call.inputValues[2].value.toString();
   }
 
-  get _email(): string {
+  get _shipAddress(): string {
     return this._call.inputValues[3].value.toString();
   }
 
-  get _homeAddress(): string {
-    return this._call.inputValues[4].value.toString();
-  }
-
   get _pfp(): string {
-    return this._call.inputValues[5].value.toString();
+    return this._call.inputValues[4].value.toString();
   }
 }
 

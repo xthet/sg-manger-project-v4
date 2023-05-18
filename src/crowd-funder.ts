@@ -13,7 +13,7 @@ import {
   CrowdFunder
 } from "../generated/schema"
 
-const cdf = "0xb3a2098Bc20B46C63f39485F618831645DE53703"
+const cdf = "0x2DCA668091323BCd8AE2DaD22fE62411578E5B21"
 
 export function handleCampaignAdded(event: CampaignAddedEvent): void {
   let campaignAdded = CampaignAdded.load(event.params._campaignAddress.toHexString())
@@ -39,6 +39,7 @@ export function handleCampaignAdded(event: CampaignAddedEvent): void {
     userAdded.created = new Array<Bytes>(0)
     userAdded.backed = new Array<Bytes>(0)
     userAdded.totalRaised = BigInt.fromString("0")
+    userAdded.totalDonated = BigInt.fromString("0")
     userAdded.publishedCount = BigInt.fromString("0")
     userAdded.backedCount = BigInt.fromString("0")
     userAdded.createdAt = event.block.timestamp
@@ -80,6 +81,7 @@ export function handleCampaignFunded(event: CampaignFundedEvent): void {
     userAdded.created = new Array<Bytes>(0)
     userAdded.backed = new Array<Bytes>(0)
     userAdded.totalRaised = BigInt.fromString("0")
+    userAdded.totalDonated = BigInt.fromString("0")
     userAdded.publishedCount = BigInt.fromString("0")
     userAdded.backedCount = BigInt.fromString("0")
     userAdded.createdAt = event.block.timestamp
@@ -115,20 +117,9 @@ export function handleCampaignFunded(event: CampaignFundedEvent): void {
 export function handleCampaignRemoved(event: CampaignRemovedEvent): void {
   let id = event.params._campaignAddress.toHexString()
   let campaignAdded = CampaignAdded.load(event.params._campaignAddress.toHexString())
-  let crowdFunder = CrowdFunder.load(cdf)
-  if(!crowdFunder){
-    crowdFunder = new CrowdFunder(cdf)
-    crowdFunder.trueAmount = BigInt.fromString("0")
-    crowdFunder.campaignCount = BigInt.fromString("0")
-    crowdFunder.donationCount = BigInt.fromString("0")
-    crowdFunder.creatorCount = BigInt.fromString("0")
-  }
-  // if(campaignAdded!.published){
-  //   crowdFunder.campaignCount = crowdFunder.campaignCount!.minus(BigInt.fromString("1"))
-  // }
 
   store.remove("CampaignAdded", id)
-  crowdFunder.save()
+  campaignAdded!.save()
 }
 
 export function handleCampaignShrunk(event: CampaignShrunkEvent): void {
@@ -144,12 +135,13 @@ export function handleCampaignShrunk(event: CampaignShrunkEvent): void {
     crowdFunder.creatorCount = BigInt.fromString("0")
   }
   
-  if(!userAdded){  // withdrawer
+  if(!userAdded){
     userAdded = new UserAdded(event.params._withdrawer.toHexString())
     userAdded.address = event.params._withdrawer
     userAdded.created = new Array<Bytes>(0)
     userAdded.backed = new Array<Bytes>(0)
     userAdded.totalRaised = BigInt.fromString("0")
+    userAdded.totalDonated = BigInt.fromString("0")
     userAdded.publishedCount = BigInt.fromString("0")
     userAdded.backedCount = BigInt.fromString("0")
     userAdded.createdAt = event.block.timestamp
@@ -197,6 +189,7 @@ export function handleUserAdded(event: UserAddedEvent): void {
     userAdded.created = new Array<Bytes>(0)
     userAdded.backed = new Array<Bytes>(0)
     userAdded.totalRaised = BigInt.fromString("0")
+    userAdded.totalDonated = BigInt.fromString("0")
     userAdded.publishedCount = BigInt.fromString("0")
     userAdded.backedCount = BigInt.fromString("0")
     userAdded.createdAt = event.block.timestamp
@@ -204,9 +197,8 @@ export function handleUserAdded(event: UserAddedEvent): void {
 
   userAdded.address = event.params._address
   userAdded.username = event.params._username
-  userAdded.twitter = event.params._twitter
   userAdded.email = event.params._email
-  userAdded.homeAddr = event.params._homeAddress
+  userAdded.shipAddr = event.params._shipAddress
   userAdded.createdAt = event.block.timestamp
   userAdded.pfp = event.params._pfp
 
@@ -224,6 +216,7 @@ export function handleCampaignPublished(event: CampaignPublishedEvent): void {
     userAdded.created = new Array<Bytes>(0)
     userAdded.backed = new Array<Bytes>(0)
     userAdded.totalRaised = BigInt.fromString("0")
+    userAdded.totalDonated = BigInt.fromString("0")
     userAdded.publishedCount = BigInt.fromString("0")
     userAdded.backedCount = BigInt.fromString("0")
     userAdded.createdAt = event.block.timestamp

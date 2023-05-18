@@ -1,30 +1,5 @@
 [
   {
-    "inputs": [],
-    "name": "Crf_CSA",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "Crf_DonF",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "Crf_NotCrtr",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "Crf_PubF",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "Crf_RefF",
-    "type": "error"
-  },
-  {
     "anonymous": false,
     "inputs": [
       {
@@ -93,6 +68,12 @@
         "internalType": "uint256",
         "name": "_val",
         "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "_c_creator",
+        "type": "address"
       }
     ],
     "name": "CampaignFunded",
@@ -150,6 +131,12 @@
         "internalType": "uint256",
         "name": "_val",
         "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "_c_creator",
+        "type": "address"
       }
     ],
     "name": "CampaignShrunk",
@@ -173,19 +160,13 @@
       {
         "indexed": false,
         "internalType": "string",
-        "name": "_twitter",
-        "type": "string"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
         "name": "_email",
         "type": "string"
       },
       {
         "indexed": false,
         "internalType": "string",
-        "name": "_homeAddress",
+        "name": "_shipAddress",
         "type": "string"
       },
       {
@@ -255,17 +236,12 @@
       },
       {
         "internalType": "string",
-        "name": "_twitter",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
         "name": "_email",
         "type": "string"
       },
       {
         "internalType": "string",
-        "name": "_homeAddress",
+        "name": "_shipAddress",
         "type": "string"
       },
       {
