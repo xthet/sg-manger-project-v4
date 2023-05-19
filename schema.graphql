@@ -19,7 +19,7 @@ type CrowdFunder @entity {
 type CampaignAdded @entity {
   id: ID!
   campaignAddress: Bytes!
-  creator: Bytes!
+  creator: UserAdded!
   title: String!
   description: String!
   category: String!
@@ -34,7 +34,7 @@ type CampaignAdded @entity {
 type CampaignFunded @entity {
   id: ID!
   val: BigInt!
-  funder: Bytes!
+  funder: UserAdded
   campaignAddress: Bytes!
   createdAt: BigInt!
   creator: Bytes!
@@ -48,7 +48,7 @@ type CampaignRemoved @entity {
 
 type CampaignShrunk @entity {
   id: ID!
-  withdrawer: Bytes!
+  withdrawer: UserAdded!
   campaignAddress: Bytes!
   createdAt: BigInt!
   val: BigInt!
