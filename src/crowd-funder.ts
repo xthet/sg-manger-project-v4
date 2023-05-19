@@ -10,7 +10,8 @@ import {
 import {
   CampaignAdded,
   UserAdded,
-  CrowdFunder
+  CrowdFunder,
+  CampaignFunded,
 } from "../generated/schema"
 
 const cdf = "0x2DCA668091323BCd8AE2DaD22fE62411578E5B21"
@@ -46,7 +47,7 @@ export function handleCampaignAdded(event: CampaignAddedEvent): void {
   }
 
   campaignAdded.campaignAddress = event.params._campaignAddress
-  campaignAdded.creator = event.params._creator
+  campaignAdded.creator = userAdded.id
   campaignAdded.title = event.params._title
   campaignAdded.description = event.params._description
   campaignAdded.category = event.params._category
@@ -65,9 +66,15 @@ export function handleCampaignAdded(event: CampaignAddedEvent): void {
 
 export function handleCampaignFunded(event: CampaignFundedEvent): void {
   let campaignAdded = CampaignAdded.load(event.params._campaignAddress.toHexString())
+  let campaignFunded = CampaignFunded.load(event.transaction.from.toHexString())
   let i_funder = UserAdded.load(event.params._funder.toHexString())
   let i_creator = UserAdded.load(event.params._c_creator.toHexString())
   let crowdFunder = CrowdFunder.load(cdf)
+
+  if(!campaignFunded){
+    campaignFunded = new CampaignFunded(event.transaction.from.toHexString())
+  }
+
   if(!crowdFunder){
     crowdFunder = new CrowdFunder(cdf)
     crowdFunder.trueAmount = BigInt.fromString("0")
@@ -129,6 +136,7 @@ export function handleCampaignFunded(event: CampaignFundedEvent): void {
   crowdFunder.save()
   i_creator.save()
   i_funder.save()
+  campaignFunded.save()
 }
 
 export function handleCampaignRemoved(event: CampaignRemovedEvent): void {
