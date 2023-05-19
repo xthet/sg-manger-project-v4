@@ -282,21 +282,13 @@ export class CampaignFunded extends Entity {
     this.set("val", Value.fromBigInt(value));
   }
 
-  get funder(): string | null {
+  get funder(): string {
     let value = this.get("funder");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toString();
-    }
+    return value!.toString();
   }
 
-  set funder(value: string | null) {
-    if (!value) {
-      this.unset("funder");
-    } else {
-      this.set("funder", Value.fromString(<string>value));
-    }
+  set funder(value: string) {
+    this.set("funder", Value.fromString(value));
   }
 
   get campaignAddress(): Bytes {
@@ -317,13 +309,13 @@ export class CampaignFunded extends Entity {
     this.set("createdAt", Value.fromBigInt(value));
   }
 
-  get creator(): Bytes {
+  get creator(): string {
     let value = this.get("creator");
-    return value!.toBytes();
+    return value!.toString();
   }
 
-  set creator(value: Bytes) {
-    this.set("creator", Value.fromBytes(value));
+  set creator(value: string) {
+    this.set("creator", Value.fromString(value));
   }
 }
 
@@ -444,13 +436,13 @@ export class CampaignShrunk extends Entity {
     this.set("val", Value.fromBigInt(value));
   }
 
-  get creator(): Bytes {
+  get creator(): string {
     let value = this.get("creator");
-    return value!.toBytes();
+    return value!.toString();
   }
 
-  set creator(value: Bytes) {
-    this.set("creator", Value.fromBytes(value));
+  set creator(value: string) {
+    this.set("creator", Value.fromString(value));
   }
 }
 
