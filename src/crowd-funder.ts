@@ -12,6 +12,7 @@ import {
   UserAdded,
   CrowdFunder,
   CampaignFunded,
+  CampaignShrunk,
 } from "../generated/schema"
 
 const cdf = "0x2DCA668091323BCd8AE2DaD22fE62411578E5B21"
@@ -71,10 +72,6 @@ export function handleCampaignFunded(event: CampaignFundedEvent): void {
   let i_creator = UserAdded.load(event.params._c_creator.toHexString())
   let crowdFunder = CrowdFunder.load(cdf)
 
-  if(!campaignFunded){
-    campaignFunded = new CampaignFunded(event.transaction.from.toHexString())
-  }
-
   if(!crowdFunder){
     crowdFunder = new CrowdFunder(cdf)
     crowdFunder.trueAmount = BigInt.fromString("0")
@@ -106,6 +103,21 @@ export function handleCampaignFunded(event: CampaignFundedEvent): void {
     i_creator.backedCount = BigInt.fromString("0")
     i_creator.createdAt = event.block.timestamp
   }
+
+  if(!campaignFunded){
+    campaignFunded = new CampaignFunded(event.transaction.from.toHexString())
+    campaignFunded.campaignAddress = event.params._campaignAddress
+    campaignFunded.createdAt = event.block.timestamp
+    campaignFunded.creator = i_creator.id
+    campaignFunded.funder = i_funder.id
+    campaignFunded.val = event.params._val
+  }
+
+  campaignFunded.campaignAddress = event.params._campaignAddress
+  campaignFunded.createdAt = event.block.timestamp
+  campaignFunded.creator = i_creator.id
+  campaignFunded.funder = i_funder.id
+  campaignFunded.val = event.params._val
 
   crowdFunder.donationCount = crowdFunder.donationCount!.plus(BigInt.fromString("1"))
   crowdFunder.trueAmount = crowdFunder.trueAmount!.plus(event.params._val)
@@ -149,6 +161,7 @@ export function handleCampaignRemoved(event: CampaignRemovedEvent): void {
 
 export function handleCampaignShrunk(event: CampaignShrunkEvent): void {
   let campaignAdded = CampaignAdded.load(event.params._campaignAddress.toHexString())
+  let campaignShrunk = CampaignShrunk.load(event.transaction.from.toHexString())
   let i_withdrawer = UserAdded.load(event.params._withdrawer.toHexString())
   let i_creator = UserAdded.load(event.params._c_creator.toHexString())
   let crowdFunder = CrowdFunder.load(cdf)
@@ -184,6 +197,8 @@ export function handleCampaignShrunk(event: CampaignShrunkEvent): void {
     i_creator.backedCount = BigInt.fromString("0")
     i_creator.createdAt = event.block.timestamp
   }
+
+  if(!campaignShrunk)
 
   if((campaignAdded!.funderCount.gt(BigInt.fromString("0"))) && (campaignAdded!.funders.includes(event.params._withdrawer))){
     // if funder in array and funders > 0
