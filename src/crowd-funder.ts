@@ -1,3 +1,4 @@
+import { BigInt, Bytes, store } from "@graphprotocol/graph-ts"
 import {
   CampaignAdded as CampaignAddedEvent,
   CampaignFunded as CampaignFundedEvent,
@@ -8,104 +9,301 @@ import {
 } from "../generated/CrowdFunder/CrowdFunder"
 import {
   CampaignAdded,
+  UserAdded,
+  CrowdFunder,
   CampaignFunded,
-  CampaignPublished,
-  CampaignRemoved,
   CampaignShrunk,
-  UserAdded
 } from "../generated/schema"
 
+const cdf = "0x990AfB3FC9238DD61Ee4fc6E1BAB33B0F57a6831"
+
 export function handleCampaignAdded(event: CampaignAddedEvent): void {
-  let entity = new CampaignAdded(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity._campaignAddress = event.params._campaignAddress
-  entity._creator = event.params._creator
-  entity._title = event.params._title
-  entity._description = event.params._description
-  entity._category = event.params._category
-  entity._tags = event.params._tags
-  entity._imageURI = event.params._imageURI
+  let campaignAdded = CampaignAdded.load(event.params._campaignAddress.toHexString())
+  let userAdded = UserAdded.load(event.params._creator.toHexString())
+  let crowdFunder = CrowdFunder.load(cdf)
+  if(!crowdFunder){
+    crowdFunder = new CrowdFunder(cdf)
+    crowdFunder.trueAmount = BigInt.fromString("0")
+    crowdFunder.campaignCount = BigInt.fromString("0")
+    crowdFunder.donationCount = BigInt.fromString("0")
+    crowdFunder.creatorCount = BigInt.fromString("0")
+  }
+  if(!campaignAdded){
+    campaignAdded = new CampaignAdded(event.params._campaignAddress.toHexString())
+    campaignAdded.funderCount = BigInt.fromString("0")
+    campaignAdded.funders = new Array<Bytes>(0)
+    campaignAdded.createdAt = event.block.timestamp
+    campaignAdded.isPublished = false
+  }
+  if(!userAdded){
+    userAdded = new UserAdded(event.params._creator.toHexString())
+    userAdded.address = event.params._creator
+    userAdded.created = new Array<Bytes>(0)
+    userAdded.backed = new Array<Bytes>(0)
+    userAdded.totalRaised = BigInt.fromString("0")
+    userAdded.totalDonated = BigInt.fromString("0")
+    userAdded.publishedCount = BigInt.fromString("0")
+    userAdded.backedCount = BigInt.fromString("0")
+    userAdded.createdAt = event.block.timestamp
+  }
 
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
+  campaignAdded.campaignAddress = event.params._campaignAddress
+  campaignAdded.creator = userAdded.id
+  campaignAdded.title = event.params._title
+  campaignAdded.description = event.params._description
+  campaignAdded.category = event.params._category
+  campaignAdded.tags = event.params._tags
+  campaignAdded.imageURI = event.params._imageURI
 
-  entity.save()
+  let createdCmps = userAdded.created
+  createdCmps.push(event.params._campaignAddress)
+  userAdded.created = createdCmps
+  // both published and drafts
+
+  userAdded.save()
+  campaignAdded.save()
+  crowdFunder.save()
 }
 
 export function handleCampaignFunded(event: CampaignFundedEvent): void {
-  let entity = new CampaignFunded(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity._funder = event.params._funder
-  entity._campaignAddress = event.params._campaignAddress
-  entity._val = event.params._val
-  entity._c_creator = event.params._c_creator
+  let campaignAdded = CampaignAdded.load(event.params._campaignAddress.toHexString())
+  let campaignFunded = CampaignFunded.load(event.transaction.from.toHexString())
+  let i_funder = UserAdded.load(event.params._funder.toHexString())
+  let i_creator = UserAdded.load(event.params._c_creator.toHexString())
+  let crowdFunder = CrowdFunder.load(cdf)
 
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
+  if(!crowdFunder){
+    crowdFunder = new CrowdFunder(cdf)
+    crowdFunder.trueAmount = BigInt.fromString("0")
+    crowdFunder.campaignCount = BigInt.fromString("0")
+    crowdFunder.donationCount = BigInt.fromString("0")
+    crowdFunder.creatorCount = BigInt.fromString("0")
+  }
 
-  entity.save()
-}
+  if(!i_funder){
+    i_funder = new UserAdded(event.params._funder.toHexString())
+    i_funder.address = event.params._funder
+    i_funder.created = new Array<Bytes>(0)
+    i_funder.backed = new Array<Bytes>(0)
+    i_funder.totalRaised = BigInt.fromString("0")
+    i_funder.totalDonated = BigInt.fromString("0")
+    i_funder.publishedCount = BigInt.fromString("0")
+    i_funder.backedCount = BigInt.fromString("0")
+    i_funder.createdAt = event.block.timestamp
+  }
 
-export function handleCampaignPublished(event: CampaignPublishedEvent): void {
-  let entity = new CampaignPublished(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity._campaignAddress = event.params._campaignAddress
-  entity._creator = event.params._creator
+  if(!i_creator){
+    i_creator = new UserAdded(event.params._c_creator.toHexString())
+    i_creator.address = event.params._c_creator
+    i_creator.created = new Array<Bytes>(0)
+    i_creator.backed = new Array<Bytes>(0)
+    i_creator.totalRaised = BigInt.fromString("0")
+    i_creator.totalDonated = BigInt.fromString("0")
+    i_creator.publishedCount = BigInt.fromString("0")
+    i_creator.backedCount = BigInt.fromString("0")
+    i_creator.createdAt = event.block.timestamp
+  }
 
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
+  if(!campaignFunded){
+    campaignFunded = new CampaignFunded(event.transaction.from.toHexString())
+    campaignFunded.campaignAddress = event.params._campaignAddress
+    campaignFunded.createdAt = event.block.timestamp
+    campaignFunded.creator = i_creator.id
+    campaignFunded.funder = i_funder.id
+    campaignFunded.val = event.params._val
+  }
 
-  entity.save()
+  campaignFunded.campaignAddress = event.params._campaignAddress
+  campaignFunded.createdAt = event.block.timestamp
+  campaignFunded.creator = i_creator.id
+  campaignFunded.funder = i_funder.id
+  campaignFunded.val = event.params._val
+
+  crowdFunder.donationCount = crowdFunder.donationCount!.plus(BigInt.fromString("1"))
+  crowdFunder.trueAmount = crowdFunder.trueAmount!.plus(event.params._val)
+
+  if(!(campaignAdded!.funders.includes(event.params._funder))){
+    // if not initially present in funders array (only unique funders)
+    let cmpFunders = campaignAdded!.funders
+    cmpFunders.push(event.params._funder)
+    campaignAdded!.funders = cmpFunders
+
+    campaignAdded!.funderCount = campaignAdded!.funderCount.plus(BigInt.fromString("1"))
+  }
+
+  // funder adds a new cmp to his backed array
+  if(!(i_funder.backed.includes(event.params._campaignAddress))){  
+    // if not initially present in backed array 
+    let backers = i_funder.backed
+    backers.push(event.params._campaignAddress)
+    i_funder.backed = backers
+    i_funder.backedCount = i_funder.backedCount!.plus(BigInt.fromString("1"))
+  }
+  i_funder.totalDonated = i_funder.totalDonated.plus(event.params._val)
+
+  // cmp creator gains some funding
+  i_creator.totalRaised = i_creator.totalRaised.plus(event.params._val)
+
+  campaignAdded!.save()
+  crowdFunder.save()
+  i_creator.save()
+  i_funder.save()
+  campaignFunded.save()
 }
 
 export function handleCampaignRemoved(event: CampaignRemovedEvent): void {
-  let entity = new CampaignRemoved(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity._campaignAddress = event.params._campaignAddress
+  let id = event.params._campaignAddress.toHexString()
+  let campaignAdded = CampaignAdded.load(event.params._campaignAddress.toHexString())
 
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
-
-  entity.save()
+  store.remove("CampaignAdded", id)
+  campaignAdded!.save()
 }
 
 export function handleCampaignShrunk(event: CampaignShrunkEvent): void {
-  let entity = new CampaignShrunk(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity._withdrawer = event.params._withdrawer
-  entity._campaignAddress = event.params._campaignAddress
-  entity._val = event.params._val
-  entity._c_creator = event.params._c_creator
+  let campaignAdded = CampaignAdded.load(event.params._campaignAddress.toHexString())
+  let campaignShrunk = CampaignShrunk.load(event.transaction.from.toHexString())
+  let i_withdrawer = UserAdded.load(event.params._withdrawer.toHexString())
+  let i_creator = UserAdded.load(event.params._c_creator.toHexString())
+  let crowdFunder = CrowdFunder.load(cdf)
 
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
+  if(!crowdFunder){
+    crowdFunder = new CrowdFunder(cdf)
+    crowdFunder.trueAmount = BigInt.fromString("0")
+    crowdFunder.campaignCount = BigInt.fromString("0")
+    crowdFunder.donationCount = BigInt.fromString("0")
+    crowdFunder.creatorCount = BigInt.fromString("0")
+  }
+  
+  if(!i_withdrawer){
+    i_withdrawer = new UserAdded(event.params._withdrawer.toHexString())
+    i_withdrawer.address = event.params._withdrawer
+    i_withdrawer.created = new Array<Bytes>(0)
+    i_withdrawer.backed = new Array<Bytes>(0)
+    i_withdrawer.totalRaised = BigInt.fromString("0")
+    i_withdrawer.totalDonated = BigInt.fromString("0")
+    i_withdrawer.publishedCount = BigInt.fromString("0")
+    i_withdrawer.backedCount = BigInt.fromString("0")
+    i_withdrawer.createdAt = event.block.timestamp
+  }
 
-  entity.save()
+  if(!i_creator){
+    i_creator = new UserAdded(event.params._c_creator.toHexString())
+    i_creator.address = event.params._c_creator
+    i_creator.created = new Array<Bytes>(0)
+    i_creator.backed = new Array<Bytes>(0)
+    i_creator.totalRaised = BigInt.fromString("0")
+    i_creator.totalDonated = BigInt.fromString("0")
+    i_creator.publishedCount = BigInt.fromString("0")
+    i_creator.backedCount = BigInt.fromString("0")
+    i_creator.createdAt = event.block.timestamp
+  }
+
+  if(!campaignShrunk)
+
+  if((campaignAdded!.funderCount.gt(BigInt.fromString("0"))) && (campaignAdded!.funders.includes(event.params._withdrawer))){
+    // if funder in array and funders > 0
+    campaignAdded!.funderCount = campaignAdded!.funderCount.minus(BigInt.fromString("1"))
+  }
+
+  // this cmp is no longer funded by withdrawer
+  let cmpFunders = campaignAdded!.funders
+  if(cmpFunders.includes(event.params._withdrawer)){
+    const index = cmpFunders.indexOf(event.params._withdrawer)
+    cmpFunders.splice(index, 1)
+  }
+  campaignAdded!.funders = cmpFunders
+
+  // creator has lost some funding
+  i_creator.totalRaised = i_creator.totalRaised.minus(event.params._val)
+
+  // withdrawer no longer backs this cmp
+  let backers = i_withdrawer.backed
+  if(backers.includes(event.params._campaignAddress)){
+    const index = backers.indexOf(event.params._campaignAddress)
+    backers.splice(index, 1)
+  }
+  i_withdrawer.backed = backers
+
+  if(i_withdrawer.backedCount!.gt(BigInt.fromString("0"))){
+    i_withdrawer.backedCount = i_withdrawer.backedCount!.minus(BigInt.fromString("1"))
+  }
+
+  i_withdrawer.totalDonated = i_withdrawer.totalDonated.minus(event.params._val)
+ 
+  crowdFunder.donationCount = crowdFunder.donationCount!.minus(BigInt.fromString("1"))
+  crowdFunder.trueAmount = crowdFunder.trueAmount!.minus(event.params._val)
+
+  campaignAdded!.save()
+  crowdFunder.save()
+  i_creator.save()
+  i_withdrawer.save()
 }
 
 export function handleUserAdded(event: UserAddedEvent): void {
-  let entity = new UserAdded(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity._address = event.params._address
-  entity._username = event.params._username
-  entity._email = event.params._email
-  entity._shipAddress = event.params._shipAddress
-  entity._pfp = event.params._pfp
+  let userAdded = UserAdded.load(event.params._address.toHexString())
 
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
+  if(!userAdded){
+    userAdded = new UserAdded(event.params._address.toHexString())
+    userAdded.address = event.params._address
+    userAdded.created = new Array<Bytes>(0)
+    userAdded.backed = new Array<Bytes>(0)
+    userAdded.totalRaised = BigInt.fromString("0")
+    userAdded.totalDonated = BigInt.fromString("0")
+    userAdded.publishedCount = BigInt.fromString("0")
+    userAdded.backedCount = BigInt.fromString("0")
+    userAdded.createdAt = event.block.timestamp
+  }
 
-  entity.save()
+  userAdded.address = event.params._address
+  userAdded.username = event.params._username
+  userAdded.email = event.params._email
+  userAdded.shipAddr = event.params._shipAddress
+  userAdded.createdAt = event.block.timestamp
+  userAdded.pfp = event.params._pfp
+
+  userAdded.save()
+}
+
+export function handleCampaignPublished(event: CampaignPublishedEvent): void {
+  let campaignAdded = CampaignAdded.load(event.params._campaignAddress.toHexString())
+  let crowdFunder = CrowdFunder.load(cdf)
+  let userAdded = UserAdded.load(event.params._creator.toHexString())
+
+  if(!userAdded){
+    userAdded = new UserAdded(event.params._creator.toHexString())
+    userAdded.address = event.params._creator
+    userAdded.created = new Array<Bytes>(0)
+    userAdded.backed = new Array<Bytes>(0)
+    userAdded.totalRaised = BigInt.fromString("0")
+    userAdded.totalDonated = BigInt.fromString("0")
+    userAdded.publishedCount = BigInt.fromString("0")
+    userAdded.backedCount = BigInt.fromString("0")
+    userAdded.createdAt = event.block.timestamp
+  }
+
+  if(!crowdFunder){
+    crowdFunder = new CrowdFunder(cdf)
+    crowdFunder.trueAmount = BigInt.fromString("0")
+    crowdFunder.campaignCount = BigInt.fromString("0")
+    crowdFunder.donationCount = BigInt.fromString("0")
+    crowdFunder.creatorCount = BigInt.fromString("0")
+  }
+
+  if(campaignAdded){  
+    campaignAdded.isPublished = true
+    campaignAdded.save()
+  }
+
+  if(userAdded.publishedCount!.equals(BigInt.fromString("0"))){
+    // on first publish
+    crowdFunder.creatorCount = crowdFunder.creatorCount!.plus(BigInt.fromString("1"))
+  }
+
+  userAdded.publishedCount = userAdded.publishedCount!.plus(BigInt.fromString("1"))
+  // only published
+
+  crowdFunder.campaignCount = crowdFunder.campaignCount!.plus(BigInt.fromString("1"))
+
+  crowdFunder.save()
+  userAdded.save()
 }

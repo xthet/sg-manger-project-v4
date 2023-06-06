@@ -1,64 +1,77 @@
-type CampaignAdded @entity(immutable: true) {
-  id: Bytes!
-  _campaignAddress: Bytes! # address
-  _creator: Bytes! # address
-  _title: String! # string
-  _description: String! # string
-  _category: String! # string
-  _tags: String! # string
-  _imageURI: String! # string
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+type _Schema_ @fulltext(
+  name: "campaignSearch"
+  language: en
+  algorithm: rank
+  include: [
+    {entity: "CampaignAdded", fields:[{name: "title"}, {name: "description"}, {name: "tags"} {name: "category"}]},
+    {entity: "UserAdded", fields:[{name: "username"}]}
+  ]
+)
+
+type CrowdFunder @entity {
+  id:ID!
+  campaignCount: BigInt # --
+  trueAmount: BigInt # --
+  donationCount: BigInt # --
+  creatorCount: BigInt # --
 }
 
-type CampaignFunded @entity(immutable: true) {
-  id: Bytes!
-  _funder: Bytes! # address
-  _campaignAddress: Bytes! # address
-  _val: BigInt! # uint256
-  _c_creator: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+type CampaignAdded @entity {
+  id: ID!
+  campaignAddress: Bytes!
+  creator: UserAdded!
+  title: String!
+  description: String!
+  category: String!
+  tags: String!
+  imageURI: String!
+  funders: [Bytes!]! # --
+  funderCount: BigInt! # --
+  createdAt: BigInt! # -- 
+  isPublished: Boolean! # --
 }
 
-type CampaignPublished @entity(immutable: true) {
-  id: Bytes!
-  _campaignAddress: Bytes! # address
-  _creator: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+type CampaignFunded @entity {
+  id: ID!
+  val: BigInt!
+  funder: UserAdded!
+  campaignAddress: Bytes!
+  createdAt: BigInt!
+  creator: UserAdded!
 }
 
-type CampaignRemoved @entity(immutable: true) {
-  id: Bytes!
-  _campaignAddress: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+type CampaignRemoved @entity {
+  id: ID!
+  campaignAddress: Bytes!
+  createdAt: BigInt!
 }
 
-type CampaignShrunk @entity(immutable: true) {
-  id: Bytes!
-  _withdrawer: Bytes! # address
-  _campaignAddress: Bytes! # address
-  _val: BigInt! # uint256
-  _c_creator: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+type CampaignShrunk @entity {
+  id: ID!
+  withdrawer: UserAdded!
+  campaignAddress: Bytes!
+  createdAt: BigInt!
+  val: BigInt!
+  creator: UserAdded!
 }
 
-type UserAdded @entity(immutable: true) {
-  id: Bytes!
-  _address: Bytes! # address
-  _username: String! # string
-  _email: String! # string
-  _shipAddress: String! # string
-  _pfp: String! # string
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+type UserAdded @entity {
+  id: ID!
+  address: Bytes!
+  username: String
+  email: String
+  shipAddr: String # shipping address
+  created: [Bytes!]! # cmps youve created --
+  backed: [Bytes!]! # cmps youve backed --
+  totalRaised: BigInt! # total amount raised across all cmps --
+  totalDonated: BigInt! # total donated across all cmps --
+  publishedCount: BigInt # amount of cmps published --
+  backedCount: BigInt # amount of cmps backed --
+  createdAt: BigInt! # date user created account --
+  pfp: String # user pfp
+}
+
+type CampaignPublished @entity {
+  id: ID!
+  address: Bytes!
 }
