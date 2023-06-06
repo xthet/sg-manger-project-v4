@@ -5,7 +5,7 @@ import {
   CampaignRemoved as CampaignRemovedEvent,
   CampaignShrunk as CampaignShrunkEvent,
   UserAdded as UserAddedEvent
-} from "../generated/Contract/Contract"
+} from "../generated/CrowdFunder/CrowdFunder"
 import {
   CampaignAdded,
   CampaignFunded,

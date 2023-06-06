@@ -8,9 +8,9 @@ import {
 } from "matchstick-as/assembly/index"
 import { Address, BigInt } from "@graphprotocol/graph-ts"
 import { CampaignAdded } from "../generated/schema"
-import { CampaignAdded as CampaignAddedEvent } from "../generated/Contract/Contract"
-import { handleCampaignAdded } from "../src/contract"
-import { createCampaignAddedEvent } from "./contract-utils"
+import { CampaignAdded as CampaignAddedEvent } from "../generated/CrowdFunder/CrowdFunder"
+import { handleCampaignAdded } from "../src/crowd-funder"
+import { createCampaignAddedEvent } from "./crowdFunder-utils"
 
 // Tests structure (matchstick-as >=0.5.0)
 // https://thegraph.com/docs/en/developer/matchstick/#tests-structure-0-5-0

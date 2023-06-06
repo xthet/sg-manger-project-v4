@@ -1,0 +1,64 @@
+type CampaignAdded @entity(immutable: true) {
+  id: Bytes!
+  _campaignAddress: Bytes! # address
+  _creator: Bytes! # address
+  _title: String! # string
+  _description: String! # string
+  _category: String! # string
+  _tags: String! # string
+  _imageURI: String! # string
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type CampaignFunded @entity(immutable: true) {
+  id: Bytes!
+  _funder: Bytes! # address
+  _campaignAddress: Bytes! # address
+  _val: BigInt! # uint256
+  _c_creator: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type CampaignPublished @entity(immutable: true) {
+  id: Bytes!
+  _campaignAddress: Bytes! # address
+  _creator: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type CampaignRemoved @entity(immutable: true) {
+  id: Bytes!
+  _campaignAddress: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type CampaignShrunk @entity(immutable: true) {
+  id: Bytes!
+  _withdrawer: Bytes! # address
+  _campaignAddress: Bytes! # address
+  _val: BigInt! # uint256
+  _c_creator: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type UserAdded @entity(immutable: true) {
+  id: Bytes!
+  _address: Bytes! # address
+  _username: String! # string
+  _email: String! # string
+  _shipAddress: String! # string
+  _pfp: String! # string
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}

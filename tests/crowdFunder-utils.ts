@@ -7,7 +7,7 @@ import {
   CampaignRemoved,
   CampaignShrunk,
   UserAdded
-} from "../generated/Contract/Contract"
+} from "../generated/CrowdFunder/CrowdFunder"
 
 export function createCampaignAddedEvent(
   _campaignAddress: Address,
