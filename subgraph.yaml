@@ -1,0 +1,39 @@
+specVersion: 0.0.5
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: Contract
+    network: sepolia
+    source:
+      address: "0x990AfB3FC9238DD61Ee4fc6E1BAB33B0F57a6831"
+      abi: Contract
+      startBlock: 3634566
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - CampaignAdded
+        - CampaignFunded
+        - CampaignPublished
+        - CampaignRemoved
+        - CampaignShrunk
+        - UserAdded
+      abis:
+        - name: Contract
+          file: ./abis/Contract.json
+      eventHandlers:
+        - event: CampaignAdded(indexed address,indexed address,string,string,string,string,string)
+          handler: handleCampaignAdded
+        - event: CampaignFunded(indexed address,indexed address,uint256,indexed address)
+          handler: handleCampaignFunded
+        - event: CampaignPublished(address,address)
+          handler: handleCampaignPublished
+        - event: CampaignRemoved(indexed address)
+          handler: handleCampaignRemoved
+        - event: CampaignShrunk(indexed address,indexed address,uint256,indexed address)
+          handler: handleCampaignShrunk
+        - event: UserAdded(indexed address,string,string,string,string)
+          handler: handleUserAdded
+      file: ./src/contract.ts
