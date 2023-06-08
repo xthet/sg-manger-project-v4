@@ -198,7 +198,20 @@ export function handleCampaignShrunk(event: CampaignShrunkEvent): void {
     i_creator.createdAt = event.block.timestamp
   }
 
-  if(!campaignShrunk)
+  if(!campaignShrunk){
+    campaignShrunk = new CampaignShrunk(event.transaction.from.toHexString())
+    campaignShrunk.campaignAddress = event.params._campaignAddress
+    campaignShrunk.createdAt = event.block.timestamp
+    campaignShrunk.creator = i_creator.id
+    campaignShrunk.withdrawer = i_withdrawer.id
+    campaignShrunk.val = event.params._val
+  }
+
+  campaignShrunk.campaignAddress = event.params._campaignAddress
+  campaignShrunk.createdAt = event.block.timestamp
+  campaignShrunk.creator = i_creator.id
+  campaignShrunk.withdrawer = i_withdrawer.id
+  campaignShrunk.val = event.params._val
 
   if((campaignAdded!.funderCount.gt(BigInt.fromString("0"))) && (campaignAdded!.funders.includes(event.params._withdrawer))){
     // if funder in array and funders > 0
